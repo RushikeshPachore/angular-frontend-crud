@@ -1,0 +1,65 @@
+<div class="container">
+    <app-employee-form></app-employee-form>
+</div>
+
+<table class="table table-hover"  >
+    <thead class="thead-dark">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Date of Birth</th>
+        <th>Gender</th>
+        <th>Designation</th>
+        <th>Age</th>
+        <th>Hobbies</th>
+        <th>Actions</th>
+    </tr>
+</thead>
+    <tbody>
+        <tr *ngFor="let employee of empService.listEmployee">
+            <td>
+                {{employee.name}}
+            </td>
+            <td>
+                {{employee.lastName}}
+            </td>
+            <td>
+                {{employee.email}}
+            </td>
+            <td>
+                {{employee.doj | date : 'yyyy-MM-dd'}}
+            </td>
+            <td>
+                {{employee.gender}}
+            </td>
+            
+            <td>
+                {{employee.designation?.designation}}
+            </td>
+            <td>
+                {{employee.age}}
+            </td>
+         
+             <td>
+                   {{employee.hobbies }}
+             </td>
+                
+                <!-- {{ employee.hobbies ? employee.hobbies : 'No data' }} -->
+           
+                
+            <td><div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Actions
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#" (click)="edit(employee)">Edit</a>
+                  <a class="dropdown-item" href="#" (click)="delete(employee.id)">Delete</a>
+                </div>
+              </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
