@@ -2,6 +2,7 @@
     <app-employee-form></app-employee-form>
 </div>
 
+<div class="container">
 <table class="table table-hover"  >
     <thead class="thead-dark">
     <tr>
@@ -50,16 +51,27 @@
                 <!-- {{ employee.hobbies ? employee.hobbies : 'No data' }} -->
            
                 
-            <td><div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Actions
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#" (click)="edit(employee)">Edit</a>
-                  <a class="dropdown-item" href="#" (click)="delete(employee.id)">Delete</a>
-                </div>
-              </div>
-            </td>
+                <td>
+                    <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Actions
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <button class="dropdown-item" type="button" (click)="edit(employee)">Edit</button>
+                        <button class="dropdown-item" type="button" (click)="delete(employee.id)">Delete</button>
+                      </div>
+                    </div>
+                </td>
+                  
         </tr>
     </tbody>
 </table>
+
+</div>
+
+<nav>
+    <ul>
+      <li><a routerLink="/login">Login</a></li>
+      <!-- <li><a routerLink="/employee-details">Employee Details</a></li> -->
+    </ul>
+</nav>

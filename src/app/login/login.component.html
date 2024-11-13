@@ -1,0 +1,49 @@
+  <nav>
+        <ul>
+          <!-- <li><a routerLink="/login">Login</a></li> -->
+          <li><a routerLink="/employee-details">Employee Details</a></li>
+        </ul>
+      </nav>
+
+<div class="login-container">
+    <h2>Login</h2>
+    <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)">
+        <div class="form-controll">
+            <label for="email">Email:</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                [(ngModel)]="loginData.email"
+                placeholder="Enter your email"
+                required
+                #email="ngModel"
+            >
+            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error-message">
+                <p>Email is required and should be valid.</p>
+            </div>
+        </div>
+
+        <div class="form-controll">
+            <label for="password">Password:</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                [(ngModel)]="loginData.password"
+                placeholder="Enter your password"
+                required
+                #password="ngModel"
+            >
+            <div *ngIf="password.invalid && (password.dirty || password.touched)" class="error-message">
+                <p>Password is required.</p>
+            </div>
+        </div>
+
+        <button type="submit" class="login-button" [disabled]="loginForm.invalid">Login</button>
+    </form>
+
+
+  
+      
+</div>

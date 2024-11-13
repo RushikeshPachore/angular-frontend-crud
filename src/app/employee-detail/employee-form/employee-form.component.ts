@@ -52,6 +52,7 @@ export class EmployeeFormComponent implements OnInit {
       alert("Please select a designation.");
       return;
     }
+   
     // Prepare the employee data payload
     const employeeData = {
       id: this.empService.employeeData.id,
@@ -61,6 +62,7 @@ export class EmployeeFormComponent implements OnInit {
       age: form.value.age,
       doj: form.value.doj,
       gender: form.value.gender,
+      password:form.value.password,
       designationID: form.value.designationID,
       hobbies: this.empService.employeeData.hobbies ||''
     };

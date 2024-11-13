@@ -11,6 +11,7 @@ export class Employee {
     designationID:number;
     designation:Designation;
     hobbies: string='';
+    password:string='';
 }
 
 export class Designation {

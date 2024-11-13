@@ -18,7 +18,7 @@ export class EmployeeService {
   listEmployee:Employee[]=[];//for get ,Employee list will be saved here
   listDesignation:Designation[]=[]; //for get
   listHobbies:Hobbies[]=[];
-   employeeDataCopy: Employee = new Employee();
+  // employeeDataCopy: Employee = new Employee();
 
 
   employeeData:Employee=new Employee(); //to post data

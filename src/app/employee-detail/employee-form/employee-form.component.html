@@ -5,10 +5,10 @@
 
 </div>
 
-<div class="formAdd">
+<div class="formAdd" >
     <form autocomplete="off" #myform="ngForm" (ngSubmit)="myform.form.valid && submit(myform)">
-        <div class="container">
-            <div class="row">
+        <div class="container" >
+            <div class="row" style="margin: 20px;">
                 <div class="col-md-3">
                     <!-- property binding using [value] for getting dymnamic value -->
                     <input type="hidden" name="id" [value]="empService.employeeData.id">
@@ -63,7 +63,20 @@
                     </select>
                 </div>  
 
-                <div class="col-md-6">
+
+                <div class="col-md-3">
+                    <label for="password"class="float-left">Password</label>
+                    <div *ngIf="password.invalid && (password.touched || password.dirty)" class="float-right" >
+                        <p class="text-danger">Required</p>
+                    </div>
+
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password" #password="ngModel" [(ngModel)]="empService.employeeData.password" required>
+                </div>
+
+
+
+
+                <div class="col-md-3">
                     <label for="gender">Gender</label>
                     <div class="row">
                         <div class="form-check form-check-inline ">
@@ -88,26 +101,29 @@
               (change)="onHobbyChange($event, hobby.hobbyId)">
             <label>{{ hobby.hobbyName }}</label>
           </div> -->
-
-          <label>Select Hobby</label>
+          <div class="col-md-8">
+            <div class="form-check form-check-inline ">
+          <label>Select Hobby  :</label>
           <div *ngFor="let hobby of empService.listHobbies">
             <input 
               type="checkbox" 
               [checked]="empService.employeeData.hobbies?.split(',').includes(hobby.hobbyId.toString())"
               (change)="onHobbyChange($event, hobby.hobbyId)">
-            <label>{{ hobby.hobbyName }}</label>
+           <span> <label>{{ hobby.hobbyName }}</label> </span>
           </div>
-          
+        </div>
+        </div>
           
 
                 <div class="row">
-                    <div class="col-md-8"></div>
-                    <div class="col-md-6">
+                    
+                    <div class="col-md-6 float-right">
                         <button type="submit" [disabled]="designationID.value===0" class="btn btn-success btn-block">Save</button>
                     </div>    
-                    <div class="col-md-6">
+                    <div class="col-md-6 ">
                         <button type="reset" class="btn btn-danger btn-block">Cancel</button>
                     </div>
+             
                 </div>
             </div>
         </div>

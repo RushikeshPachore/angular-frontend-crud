@@ -28,38 +28,20 @@ export class EmployeeDetailComponent {
       this.availableHobbies = hobbies;
       console.log('Available Hobbies:', hobbies);
     });
-
     });
   }
 
   edit(selectedEmployee: Employee) {
     this.empService.employeeData={...selectedEmployee} 
     console.log("empdata:",this.empService.employeeData)
-    // Format the date of joining using datepipe
-    // const selectedHobbies = this.empService.employeeData.hobbies
-    // ? this.empService.employeeData.hobbies.split(',').map(Number)
-    // : [];
-    
     const selectedHobbies = this.empService.employeeData.hobbies
     ? this.empService.employeeData.hobbies.split(',')
     : [];
-
     let df = this.datepipe.transform(selectedEmployee.doj, 'yyyy-MM-dd');
     this.empService.employeeData.doj = df;
 
-    // this.empService.employeeData = selectedEmployee;
-    // ADDED: Initialize the selected hobbies based on the employee's hobbies
-    // const selectedHobbies = selectedEmployee.hobbies ? selectedEmployee.hobbies.split(',').map(Number) : [];
-    
-    // this.empService.listHobbies.forEach(hobby=>{
-    //   // debugger;
-    //   hobby.isSelected=selectedHobbies.includes(hobby.hobbyName);
-    //   console.log("checking for",hobby.hobbyId,hobby.isSelected);
-    // })
-    // ADDED: You don't need to update 'isSelected', as your template will handle this directly
     console.log("Selected hobbies for editing:", selectedHobbies);
   }
-
 
 
   delete(id: number) {
@@ -87,9 +69,6 @@ export class EmployeeDetailComponent {
   }
   
   
-
-
-
 
 
   getHobbiesNames(selectedEmployee: Employee): string {

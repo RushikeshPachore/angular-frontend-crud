@@ -7,11 +7,13 @@ import { EmployeeDetailComponent } from './employee-detail/employee-detail.compo
 import { EmployeeFormComponent } from './employee-detail/employee-form/employee-form.component';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { LoginComponent } from './login/login.component';
 @NgModule({
   declarations: [
     AppComponent,
     EmployeeDetailComponent,
-    EmployeeFormComponent
+    EmployeeFormComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
