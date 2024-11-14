@@ -9,18 +9,15 @@ import { Observable, tap } from 'rxjs';
 })
 export class EmployeeService {
   
-
   constructor(private http:HttpClient) { } //http object for crud operation
-  employeeUrl:string='https://localhost:7280/api/Employees';  //api endpoint for managing employee data.port number is from backend
-  designationUrl:string='https://localhost:7280/api/Designation';
-  hobbyUrl:string='https://localhost:7280/api/Hobbies';
+  employeeUrl: string = 'http://localhost:5213/api/Employees';  //api endpoint for managing employee data.port number is from backend
+  designationUrl:string='http://localhost:5213/api/Designation';
+  hobbyUrl:string='http://localhost:5213/api/Hobbies';
   
   listEmployee:Employee[]=[];//for get ,Employee list will be saved here
   listDesignation:Designation[]=[]; //for get
   listHobbies:Hobbies[]=[];
   // employeeDataCopy: Employee = new Employee();
-
-
   employeeData:Employee=new Employee(); //to post data
 
   saveEmployee(employee:any): Observable<any>{ 
@@ -44,9 +41,7 @@ export class EmployeeService {
     return this.http.get<Employee[]>(this.employeeUrl);
   }
 
-
-
-getHobbies(): Observable<Hobbies[]> {
+  getHobbies(): Observable<Hobbies[]> {
   return this.http.get<Hobbies[]>(this.hobbyUrl);
 }
 

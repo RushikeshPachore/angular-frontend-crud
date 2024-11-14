@@ -1,24 +1,23 @@
-  <nav>
-        <ul>
-          <!-- <li><a routerLink="/login">Login</a></li> -->
-          <li><a routerLink="/employee-details">Employee Details</a></li>
-        </ul>
-      </nav>
 
-<div class="login-container">
+<!-- loginForm is the reference variable for form element. -->
+ <!-- ngForm is the directive , that automatically tracks the form state , validation -->
+  <!-- So, by using #loginForm="ngForm", you are assigning the form’s validation and state management (like whether the form is valid or not) to the loginForm variable, which can then be accessed inside the component template. -->
+<!-- (ngSubmit) is the event binding for form submission, triggers when form submitted and executes method which is associated -->
+ <!-- [(ngModel)] is Angular's two-way data binding syntax, #email="ngModel" creates a template reference variable .that references the ngModel directive applied to this input field. This means you can access the properties and methods provided by ngModel within the template. -->
+ <!-- ngModel directive properties such as :valid, dirty, touched, errors -->
+ <nav>
+    <ul>
+      <!-- <li><a routerLink="/login">Login</a></li> -->
+      <li><a routerLink="/employee-details">Employee Details</a></li>
+    </ul>
+</nav>
+ 
+ <div class="login-container">
     <h2>Login</h2>
     <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)">
         <div class="form-controll">
             <label for="email">Email:</label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                [(ngModel)]="loginData.email"
-                placeholder="Enter your email"
-                required
-                #email="ngModel"
-            >
+           <input type="email" id="email" name="email" [(ngModel)]="loginData.email" placeholder="Enter your email" #email="ngModel">
             <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error-message">
                 <p>Email is required and should be valid.</p>
             </div>
@@ -26,15 +25,7 @@
 
         <div class="form-controll">
             <label for="password">Password:</label>
-            <input
-                type="password"
-                id="password"
-                name="password"
-                [(ngModel)]="loginData.password"
-                placeholder="Enter your password"
-                required
-                #password="ngModel"
-            >
+           <input type="password" id="password" name="password" placeholder="Enter your password" [(ngModel)]="loginData.password" #password="ngModel">
             <div *ngIf="password.invalid && (password.dirty || password.touched)" class="error-message">
                 <p>Password is required.</p>
             </div>
@@ -42,8 +33,5 @@
 
         <button type="submit" class="login-button" [disabled]="loginForm.invalid">Login</button>
     </form>
-
-
-  
-      
+    
 </div>
