@@ -1,0 +1,41 @@
+.header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .user-info span {
+    font-weight: bold;
+  }
+  
+  .user-info button {
+    background-color: #ff4d4d;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .user-info button:hover {
+    background-color: #cc0000;
+  }
+  
+  .content {
+    text-align: center;
+    padding: 50px;
+  }
+  
+  h2 {
+    color: #28a745;
+  }
+  

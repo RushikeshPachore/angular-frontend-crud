@@ -24,13 +24,23 @@ export class LoginComponent {
         next:(response:any)=>{
           console.log('login response',response)
 
-          alert(response.Message || 'Logged in Successful');
-          this.router.navigate(['/employee-details']);
+          // alert(response.Message || 'Logged in Successful');
+          // this.router.navigate(['/employee-details']);
 
+          if(response.success){
+          localStorage.setItem('userName',response.userName);
+          localStorage.setItem('email',response.email);
+          localStorage.setItem('userId',response.userId);
+
+          this.router.navigate(['/redirect']);
+          }else{
+            console.error('Login Failed');
+            alert('Invalid email or password, try again');
+          }
         },
         error:(error)=>{
           console.error('login error',error);
-          alert('Invalid email or password');
+          alert('Invalid Email or password');
         }
       });
     } else{

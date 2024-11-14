@@ -8,12 +8,14 @@ import { EmployeeFormComponent } from './employee-detail/employee-form/employee-
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { LoginComponent } from './login/login.component';
+import { RedirectComponent } from './redirect/redirect.component';
 @NgModule({
   declarations: [
     AppComponent,
     EmployeeDetailComponent,
     EmployeeFormComponent,
-    LoginComponent
+    LoginComponent,
+    RedirectComponent
   ],
   imports: [
     BrowserModule,
