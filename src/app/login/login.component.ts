@@ -9,6 +9,8 @@ import { Route, Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+
+
   loginData = {
     email: '',
     password: ''
@@ -23,17 +25,14 @@ export class LoginComponent {
       this.http.post(this.loginUrl,this.loginData).subscribe({
         next:(response:any)=>{
           console.log('login response',response)
-
-          // alert(response.Message || 'Logged in Successful');
-          // this.router.navigate(['/employee-details']);
-
-          if(response.success){
+          // localStorage is a feature of the Web Storage API that allows you to store key-value pairs in a web browser
+          if(response.success){  //in this response.userName, "userName" should be same written in backend api,then only it will work
           localStorage.setItem('userName',response.userName);
           localStorage.setItem('email',response.email);
           localStorage.setItem('userId',response.userId);
 
           this.router.navigate(['/redirect']);
-          }else{
+          }else{ //error() method prvided by console object
             console.error('Login Failed');
             alert('Invalid email or password, try again');
           }

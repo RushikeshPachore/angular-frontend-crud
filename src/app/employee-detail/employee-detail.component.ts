@@ -56,7 +56,10 @@ export class EmployeeDetailComponent {
           // Reset the employee data in the service after successful deletion
           this.empService.employeeData = new Employee(); // Clear the employee data
           // Optionally, reset the form controls using the reset() method
-          this.myform.reset(); // This will reset the form fields
+          if (this.myform) {
+            this.myform.reset();
+          }
+           // This will reset the form fields
           // This will instantly reflect the change in the UI
         },
         err => {
