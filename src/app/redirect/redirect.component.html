@@ -8,7 +8,14 @@
 
 
 
+
 <div class="content">
-    <h2>Successfully Logged In {{userName}}</h2>
+    <h2>Successfully Logged In {{ userName }}</h2>
     <p>Welcome!!</p>
-</div>
+    <img *ngIf="image" [src]="image" alt="User Image" class="user-image">
+  </div>
+  
+
+
+<!-- Instead of using interpolation ({{Image}}), you can use Angular's property binding with [src]. 
+ This way, Angular will dynamically bind the image URL to the src attribute of the <img> tag. -->

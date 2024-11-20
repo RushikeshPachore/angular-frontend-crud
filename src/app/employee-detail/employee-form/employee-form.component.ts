@@ -11,6 +11,8 @@ import { EmployeeService } from 'src/app/shared/employee.service';
   styleUrls: ['./employee-form.component.css']
 })
 export class EmployeeFormComponent implements OnInit {
+isImageRequired:boolean=false;
+selectedImageName: string = '';
 [x: string]: any;
   dataService: any;
   constructor(public empService: EmployeeService) {}
@@ -19,7 +21,7 @@ export class EmployeeFormComponent implements OnInit {
     this.empService.getHobbies().subscribe(hobbies => {
       this.empService.listHobbies = hobbies;
       console.log(hobbies);
-  
+        
       this.empService.getDesignation().subscribe(designations => {
         this.empService.listDesignation = designations;
   
@@ -55,8 +57,11 @@ export class EmployeeFormComponent implements OnInit {
       gender: form.value.gender,
       password:form.value.password,
       designationID: form.value.designationID,
-      hobbies: this.empService.employeeData.hobbies ||''
+      hobbies: this.empService.employeeData.hobbies ||'',
+      image:this.empService.employeeData.image
     };
+
+
   
     console.log('Employee Data to send:', employeeData);
   
@@ -134,5 +139,28 @@ export class EmployeeFormComponent implements OnInit {
   
 
 
-  
+
+
+onImageSelected(event: any) {
+  const file = event.target.files[0]; // Get the selected file
+  if (!file) {
+    this.isImageRequired = true; 
+    return;
+  }
+  this.selectedImageName=file.name;
+  const reader = new FileReader();
+  reader.onload = () => {
+    // Set the base64 string to employeeData.image
+    this.empService.employeeData.image = reader.result as string;
+    console.log('Base64 Image Data:', this.empService.employeeData.image);
+  };
+  reader.onerror = (error) => {
+    console.error('Error reading image file:', error);
+  };
+
+  reader.readAsDataURL(file); // Convert the image to base64 string
+  this.isImageRequired = false; // Reset the flag if an image is selected
+}
+
+
 }

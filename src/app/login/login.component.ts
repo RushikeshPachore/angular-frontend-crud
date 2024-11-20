@@ -19,6 +19,8 @@ export class LoginComponent {
   loginUrl: string = 'http://localhost:5213/api/Employees/Login';
 
   constructor(private http:HttpClient,private router:Router) {}
+
+  
   onLogin(form: NgForm) {
     if (form.valid) {
       console.log('Login Data:', this.loginData);
@@ -30,7 +32,7 @@ export class LoginComponent {
           localStorage.setItem('userName',response.userName);
           localStorage.setItem('email',response.email);
           localStorage.setItem('userId',response.userId);
-
+          localStorage.setItem('image',response.image);
           this.router.navigate(['/redirect']);
           }else{ //error() method prvided by console object
             console.error('Login Failed');
@@ -49,5 +51,4 @@ export class LoginComponent {
 
   }
 }
-
 

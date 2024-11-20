@@ -42,6 +42,8 @@ export class EmployeeDetailComponent {
     : [];
     let df = this.datepipe.transform(selectedEmployee.doj, 'yyyy-MM-dd');
     this.empService.employeeData.doj = df;
+    this.empService.employeeData.password = '';
+    this.empService.employeeData.image = selectedEmployee.image || '';
     console.log("Selected hobbies for editing:", selectedHobbies);
   }
 
@@ -56,10 +58,7 @@ export class EmployeeDetailComponent {
           // Reset the employee data in the service after successful deletion
           this.empService.employeeData = new Employee(); // Clear the employee data
           // Optionally, reset the form controls using the reset() method
-          if (this.myform) {
-            this.myform.reset();
-          }
-           // This will reset the form fields
+          this.myform.reset(); // This will reset the form fields
           // This will instantly reflect the change in the UI
         },
         err => {

@@ -25,7 +25,6 @@
                     <div *ngIf="lastname.invalid && (lastname.touched || lastname.dirty)" class="float-right" >
                         <p class="text-danger">Required</p>
                     </div>
-
                     <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Enter last name" #lastname="ngModel" [(ngModel)]="empService.employeeData.lastName" required>
                 </div>
 
@@ -34,10 +33,8 @@
                     <div *ngIf="email.invalid && (email.touched || email.dirty)" class="float-right" >
                         <p class="text-danger">Required</p>
                     </div>
-
                     <input type="email" id="email" name="email" class="form-control" placeholder="Enter email" #email="ngModel" [(ngModel)]="empService.employeeData.email" required>
                 </div>
-
 
                 <div class="col-md-3">
                     <label for="age">Age</label>
@@ -48,14 +45,12 @@
                     <label for="doj" class="label">Date of Joining</label>
                     <input type="date" id="doj" name="doj" class="form-control" #doj="ngModel" [(ngModel)]="empService.employeeData.doj" required>
                 </div>
-
             
                 <div class="col-md-3">
                     <label for="designation">Designation</label>
                     <div *ngIf="designationID.touched && (empService.employeeData.designationID===0)" class="float-right">
                         <p class="text-danger">Required </p>
                     </div>
-
                     <select name="designationID" class="form-control" #designationID="ngModel" [(ngModel)]="empService.employeeData.designationID" id="designation" required>
                         <option value="0">Select designation</option>
                         <option [ngValue]="desg.id" *ngFor="let desg of empService.listDesignation ">{{desg.designation}}</option>
@@ -63,17 +58,22 @@
                 </div>  
 
 
+                
+
                 <div class="col-md-3">
                     <label for="password"class="float-left">Password</label>
-                    <div *ngIf="password.invalid && (password.touched || password.dirty)" class="float-right" >
-                        <p class="text-danger">Required</p>
-                    </div>
-
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password" #password="ngModel" [(ngModel)]="empService.employeeData.password" required>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password" #password="ngModel" [(ngModel)]="empService.employeeData.password">
                 </div>
-
-
-
+ <!-- using <input type="image"> which is meant for image buttons, not for file uploads. 
+  Instead, you should use <input type="file"> for uploading an image. -->
+                    <div class="col-md-3">
+                        <label for="image" class="float-left">Image</label>
+                        <div class="float-right">
+                            <p class="text-danger" *ngIf="isImageRequired">Image is required</p>
+                        </div>
+                        <input type="file" accept="image/*" (change)="onImageSelected($event)" id="image" name="image" class="form-control"   required>
+                        <!-- <span *ngIf="selectedImageName">{{ selectedImageName }}</span> -->
+                    </div>
 
                 <div class="col-md-3">
                     <label for="gender">Gender</label>
@@ -114,15 +114,13 @@
         </div>
           
 
-                <div class="row">
-                    
+                <div class="row"> 
                     <div class="col-md-6 float-right">
                         <button type="submit" [disabled]="designationID.value===0" class="btn btn-success btn-block">Save</button>
                     </div>    
                     <div class="col-md-6 ">
                         <button type="reset" class="btn btn-danger btn-block">Cancel</button>
                     </div>
-             
                 </div>
             </div>
         </div>

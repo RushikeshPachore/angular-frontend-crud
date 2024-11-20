@@ -6,12 +6,11 @@ export class Employee {
     age:number;
     doj:any;
     gender:string='male';
-    // isMarried:number;
-    // isActive:number;
     designationID:number;
     designation:Designation;
     hobbies: string='';
     password:string='';
+    image:string='';
 }
 
 export class Designation {
