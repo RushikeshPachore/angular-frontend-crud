@@ -1,4 +1,4 @@
-import { Component,ViewChild } from '@angular/core';
+import { Component,Input,ViewChild } from '@angular/core';
 import { EmployeeService } from '../shared/employee.service';
 import { Employee } from '../shared/employee.model';
 import { DatePipe } from '@angular/common';
@@ -11,8 +11,15 @@ import { NgForm } from '@angular/forms';
 })
 export class EmployeeDetailComponent {
   @ViewChild('myform') myform: NgForm;
+
   [x: string]: any;
+
   availableHobbies: any[] = [];
+
+  imageEdit:string='';
+
+
+  
   constructor(public empService:EmployeeService, public datepipe:DatePipe){
   }
 
@@ -29,6 +36,7 @@ export class EmployeeDetailComponent {
       console.log('Available Hobbies:', hobbies);
     });
     });
+
   }
 
 
@@ -37,15 +45,23 @@ export class EmployeeDetailComponent {
   edit(selectedEmployee: Employee) {
     this.empService.employeeData={...selectedEmployee} 
     console.log("empdata:",this.empService.employeeData)
-    const selectedHobbies = this.empService.employeeData.hobbies
-    ? this.empService.employeeData.hobbies.split(',')
-    : [];
+    // Parse hobbies if they exist, else set an empty string
+    
+    this.empService.employeeData.hobbies = this.empService.employeeData.hobbies || '';
+     console.log("Hobbies for editing:", this.empService.employeeData.hobbies);
+    // const selectedHobbies = this.empService.employeeData.hobbies
+    // ? this.empService.employeeData.hobbies.split(',').map(id => parseInt(id, 10))
+    // : [];
     let df = this.datepipe.transform(selectedEmployee.doj, 'yyyy-MM-dd');
     this.empService.employeeData.doj = df;
     this.empService.employeeData.password = '';
-    this.empService.employeeData.image = selectedEmployee.image || '';
-    console.log("Selected hobbies for editing:", selectedHobbies);
+
+    // this.empService.employeeData.image = selectedEmployee.image || '';
+    console.log('Selected image:',selectedEmployee.image);
+    this.imageEdit=`http://localhost:5213${selectedEmployee.image}`;
+
   }
+
 
 
   delete(id: number) {

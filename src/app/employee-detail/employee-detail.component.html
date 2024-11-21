@@ -1,6 +1,10 @@
 <div class="container">
-    <app-employee-form></app-employee-form>
+    <app-employee-form [imageFromPar]="imageEdit"></app-employee-form>
 </div>
+
+<!-- <app-employee-form ></app-employee-form> -->
+
+
 
 <div class="container">
 <table class="table table-hover"  >
@@ -50,12 +54,10 @@
              </td>
 
              <td>
-                {{employee.image}}
+                <img [src]="'http://localhost:5213' + employee.image" alt="Employee Image" class="img-thumbnail" width="80" height="80" />
+
              </td>
-                
-                <!-- {{ employee.hobbies ? employee.hobbies : 'No data' }} -->
-           
-                
+                                              
                 <td>
                     <div class="dropdown">
                       <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

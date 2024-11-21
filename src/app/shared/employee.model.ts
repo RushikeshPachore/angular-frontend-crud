@@ -5,7 +5,7 @@ export class Employee {
     email:string='';
     age:number;
     doj:any;
-    gender:string='male';
+    gender:string='';
     designationID:number;
     designation:Designation;
     hobbies: string='';

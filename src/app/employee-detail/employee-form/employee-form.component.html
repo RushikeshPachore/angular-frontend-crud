@@ -52,13 +52,11 @@
                         <p class="text-danger">Required </p>
                     </div>
                     <select name="designationID" class="form-control" #designationID="ngModel" [(ngModel)]="empService.employeeData.designationID" id="designation" required>
-                        <option value="0">Select designation</option>
+                        <option >Select designation</option>
                         <option [ngValue]="desg.id" *ngFor="let desg of empService.listDesignation ">{{desg.designation}}</option>
                     </select>
                 </div>  
 
-
-                
 
                 <div class="col-md-3">
                     <label for="password"class="float-left">Password</label>
@@ -72,25 +70,35 @@
                             <p class="text-danger" *ngIf="isImageRequired">Image is required</p>
                         </div>
                         <input type="file" accept="image/*" (change)="onImageSelected($event)" id="image" name="image" class="form-control"   required>
-                        <!-- <span *ngIf="selectedImageName">{{ selectedImageName }}</span> -->
+                
+
+                        <span *ngIf="imageUrl">
+                            <img [src]="imageUrl" alt="Employee Image" class="img-thumbnail" width="80" height="80" />
+                        </span>
+
+                        <span *ngIf="imageFromPar">
+                            <img [src]= "imageFromPar" alt="Employee Image"  class="img-thumbnail" width="100" height="100" />
+                        </span>
+
                     </div>
 
-                <div class="col-md-3">
+                    <div class="col-md-3">
                     <label for="gender">Gender</label>
                     <div class="row">
                         <div class="form-check form-check-inline ">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="gender" #gender="ngModel" [(ngModel)]="empService.employeeData.gender" value="Male" checked="true"> Male
+                                <input type="radio" class="form-check-input" name="gender" #gender="ngModel" [(ngModel)]="empService.employeeData.gender" value="Male" > Male
                             </label>
                         </div>
+                        <!-- //put input in label for radio button so they appear side by side -->
                         <div class="form-check form-check-inline ">
                             <label class="form-check-label">
                                 <input type="radio" class="form-check-input" name="gender" #gender="ngModel" [(ngModel)]="empService.employeeData.gender" value="Female"> Female
                             </label>
                         </div>
+                        </div>
                     </div>
-                </div>
-
+               
       
         <!-- <label>Select Hobby</label>
           <div *ngFor="let hobby of empService.listHobbies">
@@ -101,27 +109,28 @@
             <label>{{ hobby.hobbyName }}</label>
           </div> -->
           <div class="col-md-8">
-            <div class="form-check form-check-inline ">
-          <label>Select Hobby  :</label>
-          <div *ngFor="let hobby of empService.listHobbies">
-            <input 
-              type="checkbox" 
-              [checked]="empService.employeeData.hobbies?.split(',').includes(hobby.hobbyId.toString())"
-              (change)="onHobbyChange($event, hobby.hobbyId)">
-           <span> <label>{{ hobby.hobbyName }}</label> </span>
-          </div>
-        </div>
-        </div>
-          
+            <div class="form-check form-check-inline">
 
-                <div class="row"> 
-                    <div class="col-md-6 float-right">
-                        <button type="submit" [disabled]="designationID.value===0" class="btn btn-success btn-block">Save</button>
-                    </div>    
-                    <div class="col-md-6 ">
-                        <button type="reset" class="btn btn-danger btn-block">Cancel</button>
-                    </div>
-                </div>
+              <label>Select Hobby:</label>
+              <div *ngFor="let hobby of empService.listHobbies">
+                <input type="checkbox" [checked]="isHobbySelected(hobby.hobbyId)" (change)="onHobbyChange($event, hobby.hobbyId)" />                                
+                <label>{{ hobby.hobbyName }}</label>
+              </div>
+
+            </div>
+          </div>                    
+          <br>
+          <div class="row"> 
+            <div class="col-md-6 float-right">
+                <button type="submit" [disabled]="designationID.value===0" class="btn btn-success btn-block">Save</button>
+            </div>    
+            <div class="col-md-6 ">
+                <button type="button" (click)="onCancel(myform)"  class="btn btn-danger btn-block">Cancel</button>
+            </div>
+         </div>  
+            
+
+
             </div>
         </div>
     </form>

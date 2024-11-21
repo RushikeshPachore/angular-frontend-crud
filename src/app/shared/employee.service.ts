@@ -10,6 +10,7 @@ import { Observable, tap } from 'rxjs';
 export class EmployeeService {
   
   constructor(private http:HttpClient) { } //http object for crud operation
+
   employeeUrl: string = 'http://localhost:5213/api/Employees';  //api endpoint for managing employee data.port number is from backend
   designationUrl:string='http://localhost:5213/api/Designation';
   hobbyUrl:string='http://localhost:5213/api/Hobbies';
@@ -17,7 +18,7 @@ export class EmployeeService {
   listEmployee:Employee[]=[];//for get ,Employee list will be saved here
   listDesignation:Designation[]=[]; //for get
   listHobbies:Hobbies[]=[];
-  // employeeDataCopy: Employee = new Employee();
+
   employeeData:Employee=new Employee(); //to post data
 
   saveEmployee(employee:any): Observable<any>{ 
@@ -29,7 +30,6 @@ export class EmployeeService {
   }
 
   UpdateEmployee(employeeData:any): Observable<any>{
-
     if (!this.employeeData.id) {
       throw new Error("Employee ID is undefined.");
     }
@@ -54,7 +54,7 @@ deleteEmployee(id:number):Observable<any> {
     return this.http.delete(`${this.employeeUrl}/${id}`);
 }
 
-    // Set hobbies for the employee
+  // Set hobbies for the employee, store hobby ids in employee table
 setHobbiesForEmployee() {
  if (!this.employeeData.id) {
      throw new Error("Employee ID is undefined.");
@@ -62,7 +62,7 @@ setHobbiesForEmployee() {
    const hobbyIds = this.employeeData.hobbies || [];
   return this.http.post(`${this.employeeUrl}/${this.employeeData.id}/setHobbies`, hobbyIds);
 }
-    
+
 
 
 }
