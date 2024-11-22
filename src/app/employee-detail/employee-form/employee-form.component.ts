@@ -1,9 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { HtmlParser } from '@angular/compiler';
-import {  Component, Input, OnInit, Output } from '@angular/core';
+import {  Component, ElementRef, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Designation, Employee } from 'src/app/shared/employee.model';
 import { EmployeeService } from 'src/app/shared/employee.service';
+
+
 
 
 @Component({
@@ -14,8 +16,12 @@ import { EmployeeService } from 'src/app/shared/employee.service';
 
 export class EmployeeFormComponent implements OnInit {
 
+//included to uncheck the hobby checkboxes after save manually
+@ViewChildren('hobbyCheckbox') hobbyCheckboxes: QueryList<ElementRef>;
+
 isImageRequired:boolean=false;
 selectedImageName: string = '';
+
 
 //viewing image while editing. Input for child component. this is child of detail component
 @Input() imageFromPar:string='';
@@ -116,19 +122,26 @@ imageUrl:string=this.empService.employeeData.image?`http://localhost:5213${this.
   
 
   resetForm(myform: NgForm) {
-    myform.form.reset(myform.value);
+    myform.form.reset();
     this.empService.employeeData = new Employee();
     this.empService.employeeData.hobbies =''; // Reset hobbies to an empty string
     //clicked save then image is disappear in form
     this.imageFromPar='';
     this.imageUrl='';   
-  
   const fileInput = document.getElementById('image') as HTMLInputElement;
   if (fileInput) {
     fileInput.value = ''; // Clear the file input of image after save or update
   }
-  }
+
   
+   // Manually uncheck all hobby checkboxes after save, added viewChildren for that
+    this.hobbyCheckboxes.forEach((checkbox) => {
+    (checkbox.nativeElement as HTMLInputElement).checked = false;
+  });
+
+
+  }
+
 
   refreshData() { //refreshes changes in the data, gets the available data from database
     this.empService.getEmployee().subscribe(res => {
@@ -187,32 +200,35 @@ onImageSelected(event: any) {
 
 
 
-isHobbySelected(hobbyId: number): boolean {
+isHobbySelected(hobbyName: string): boolean {
   // If no hobbies are present, return false
   if (!this.empService.employeeData.hobbies) {
     return false;
   }
 
   // Parse hobbies into an array
-  const selectedHobbies = this.empService.employeeData.hobbies.split(',').map(id => parseInt(id, 10));
+  const selectedHobbies = this.empService.employeeData.hobbies.split(',');
 
   // Check if the given hobbyId is in the list
-  return selectedHobbies.includes(hobbyId);
+  return selectedHobbies.includes(hobbyName);
+
+  
 }
 
-onCancel(myform:NgForm){
-  myform.form.reset();
-  this.empService.employeeData = new Employee();
-  this.empService.employeeData.hobbies ='';
-  this.imageUrl = null;
-  this.imageFromPar = null;
 
 
-  const fileInput = document.getElementById('image') as HTMLInputElement;
-  if (fileInput) {
-    fileInput.value = ''; // Clear the file input of image after save or update
-  }
-}
+//USED FOR CANCEL BUTTON, BUT SAME INCLUDES IN RESETFORM SO
+// onCancel(myform:NgForm){
+//   myform.form.reset();
+//   this.empService.employeeData = new Employee();
+//   this.empService.employeeData.hobbies ='';
+//   this.imageUrl = null;
+//   this.imageFromPar = null;
+//   const fileInput = document.getElementById('image') as HTMLInputElement;
+//   if (fileInput) {
+//     fileInput.value = ''; // Clear the file input of image after save or update
+//   }
+// }
 
 
 }

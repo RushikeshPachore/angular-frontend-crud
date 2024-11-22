@@ -110,13 +110,11 @@
           </div> -->
           <div class="col-md-8">
             <div class="form-check form-check-inline">
-
               <label>Select Hobby:</label>
               <div *ngFor="let hobby of empService.listHobbies">
-                <input type="checkbox" [checked]="isHobbySelected(hobby.hobbyId)" (change)="onHobbyChange($event, hobby.hobbyId)" />                                
+                <input #hobbyCheckbox  type="checkbox" [checked]="isHobbySelected(hobby.hobbyName)" (change)="onHobbyChange($event, hobby.hobbyId)" />                                
                 <label>{{ hobby.hobbyName }}</label>
               </div>
-
             </div>
           </div>                    
           <br>
@@ -125,7 +123,8 @@
                 <button type="submit" [disabled]="designationID.value===0" class="btn btn-success btn-block">Save</button>
             </div>    
             <div class="col-md-6 ">
-                <button type="button" (click)="onCancel(myform)"  class="btn btn-danger btn-block">Cancel</button>
+                <!-- ALSO onCancel method can be used to reset -->
+                <button type="button" (click)="resetForm(myform)"  class="btn btn-danger btn-block">Cancel</button>
             </div>
          </div>  
             
