@@ -1,8 +1,5 @@
-<!-- <input #checkbox1 type="checkbox" name="toggle" id="toggle">
-<label for="toggle"></label>
+<!-- Assuming your cancel button is inside the employee-form component -->
 
-<div class="container">
-</div> -->
 
 <div class="formAdd" >
     <form autocomplete="off" #myform="ngForm" (ngSubmit)="myform.form.valid && submit(myform)">
@@ -33,7 +30,7 @@
                     <div *ngIf="email.invalid && (email.touched || email.dirty)" class="float-right" >
                         <p class="text-danger">Required</p>
                     </div>
-                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter email" #email="ngModel" [(ngModel)]="empService.employeeData.email" required>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter email" #email="ngModel" [(ngModel)]="empService.employeeData.email"   pattern="[a-zA-Z0-9!#$%&amp;'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*"   required>
                 </div>
 
                 <div class="col-md-3">
@@ -66,16 +63,19 @@
   Instead, you should use <input type="file"> for uploading an image. -->
                     <div class="col-md-3">
                         <label for="image" class="float-left">Image</label>
-                        <div class="float-right">
-                            <p class="text-danger" *ngIf="isImageRequired">Image is required</p>
-                        </div>
-                        <input type="file" accept="image/*" (change)="onImageSelected($event)" id="image" name="image" class="form-control"   required>
-                
 
+                        <div class="float-right">
+                            <p class="text-danger" *ngIf="isImageRequired ">Image is required</p>
+                        </div>
+
+                        <input type="file" accept="image/*" (change)="onImageSelected($event)" id="image" name="image" class="form-control"   required>
+                        
+                        <!-- while posting -->
                         <span *ngIf="imageUrl">
-                            <img [src]="imageUrl" alt="Employee Image" class="img-thumbnail" width="80" height="80" />
+                            <img [src]="imageUrl" alt="Employee Image" class="img-thumbnail" width="100" height="100" />
                         </span>
 
+                        <!-- executed when editing -->
                         <span *ngIf="imageFromPar">
                             <img [src]= "imageFromPar" alt="Employee Image"  class="img-thumbnail" width="100" height="100" />
                         </span>
@@ -112,11 +112,12 @@
             <div class="form-check form-check-inline">
               <label>Select Hobby:</label>
               <div *ngFor="let hobby of empService.listHobbies">
-                <input #hobbyCheckbox  type="checkbox" [checked]="isHobbySelected(hobby.hobbyName)" (change)="onHobbyChange($event, hobby.hobbyId)" />                                
+                <input #hobbyCheckbox  type="checkbox" [checked]="isHobbySelected(hobby.hobbyId)" (change)="onHobbyChange($event, hobby.hobbyId)" />                                
                 <label>{{ hobby.hobbyName }}</label>
               </div>
             </div>
-          </div>                    
+          </div>  
+          
           <br>
           <div class="row"> 
             <div class="col-md-6 float-right">
@@ -124,11 +125,9 @@
             </div>    
             <div class="col-md-6 ">
                 <!-- ALSO onCancel method can be used to reset -->
-                <button type="button" (click)="resetForm(myform)"  class="btn btn-danger btn-block">Cancel</button>
+                <button type="button" (click)="onCancel(myform)"  class="btn btn-danger btn-block">Cancel</button>
             </div>
          </div>  
-            
-
 
             </div>
         </div>

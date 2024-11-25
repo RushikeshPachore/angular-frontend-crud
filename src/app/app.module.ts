@@ -19,9 +19,9 @@ import { RedirectComponent } from './redirect/redirect.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule
+    AppRoutingModule, //for Router Outlet
+    HttpClientModule, //for Http
+    FormsModule //for NgModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

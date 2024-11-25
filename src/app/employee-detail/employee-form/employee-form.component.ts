@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { HtmlParser } from '@angular/compiler';
-import {  Component, ElementRef, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import {  Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Designation, Employee } from 'src/app/shared/employee.model';
 import { EmployeeService } from 'src/app/shared/employee.service';
@@ -23,20 +23,25 @@ isImageRequired:boolean=false;
 selectedImageName: string = '';
 
 
+@Output() cancelClick = new EventEmitter<void>();
+
+
 //viewing image while editing. Input for child component. this is child of detail component
+
 @Input() imageFromPar:string='';
 
 //for viewing image while posting
 imageUrl:string=this.empService.employeeData.image?`http://localhost:5213${this.empService.employeeData.image}`:'';
 
-[x: string]: any;
-  dataService: any;
-  constructor(public empService: EmployeeService) {}
+
+//services are injected in constructor of component class. Included through dependency injection
+constructor(public empService: EmployeeService) {
+
+}
 
 
-
+//Lifecycle hook, called once when compoent is initialized. mostly used to fetch data from services or APIs.
   ngOnInit() {
-  
     this.empService.getHobbies().subscribe(hobbies => {
       this.empService.listHobbies = hobbies;
       console.log(hobbies);
@@ -49,8 +54,8 @@ imageUrl:string=this.empService.employeeData.image?`http://localhost:5213${this.
           this.empService.getEmployeeById(this.empService.employeeData.id).subscribe(employee => {
             this.empService.employeeData = employee;
             
-            this.empService.employeeData.hobbies = this.empService.employeeData.hobbies
-            ? this.empService.employeeData.hobbies.split(',').filter(h => h).join(',')
+            this.empService.employeeData.hobbies = employee.hobbies
+            ? employee.hobbies.split(',').filter(h => h).join(',')
             : '';
 
             this.imageUrl=this.empService.employeeData.image?`http://localhost:5213${this.empService.employeeData.image}`: '';
@@ -61,12 +66,18 @@ imageUrl:string=this.empService.employeeData.image?`http://localhost:5213${this.
     });
   }  
 
-  submit(form: NgForm) {
 
+
+  submit(form: NgForm) {
+    debugger;
     if (this.empService.employeeData.designationID === 0 || !this.empService.employeeData.designationID) {
       alert("Please select a designation.");
       return;
     } 
+
+      // Convert hobbies array back to a comma-separated string
+
+
     // Prepare the employee data payload
     const employeeData = {
       id: this.empService.employeeData.id,
@@ -78,7 +89,7 @@ imageUrl:string=this.empService.employeeData.image?`http://localhost:5213${this.
       gender: form.value.gender,
       password:form.value.password,
       designationID: form.value.designationID,
-      hobbies: this.empService.employeeData.hobbies ||'',  //checkbox so access this way
+      hobbies:  this.empService.employeeData.hobbies,  //checkbox so access this way
       image:this.empService.employeeData.image //file type
     };
 
@@ -91,8 +102,9 @@ imageUrl:string=this.empService.employeeData.image?`http://localhost:5213${this.
     }
   }
   
-
+  //wehere subscribe is written there response is seen.
   insertEmployee(employeeData: any, myform: NgForm) {
+    debugger;
     this.empService.saveEmployee(employeeData).subscribe({
       next: (response) => {
         this.resetForm(myform);
@@ -105,8 +117,11 @@ imageUrl:string=this.empService.employeeData.image?`http://localhost:5213${this.
       }
     });
   }
+
+
   
   updateEmployee(employeeData: any, myform: NgForm) {
+    debugger;
     this.empService.UpdateEmployee(employeeData).subscribe({
       next: (response) => {
         this.resetForm(myform);
@@ -124,24 +139,23 @@ imageUrl:string=this.empService.employeeData.image?`http://localhost:5213${this.
   resetForm(myform: NgForm) {
     myform.form.reset();
     this.empService.employeeData = new Employee();
-    this.empService.employeeData.hobbies =''; // Reset hobbies to an empty string
+    this.empService.employeeData.hobbies ='';// Reset hobbies to an empty string
     //clicked save then image is disappear in form
     this.imageFromPar='';
     this.imageUrl='';   
+    this.cancelClick.emit();
   const fileInput = document.getElementById('image') as HTMLInputElement;
   if (fileInput) {
     fileInput.value = ''; // Clear the file input of image after save or update
   }
-
   
+
    // Manually uncheck all hobby checkboxes after save, added viewChildren for that
     this.hobbyCheckboxes.forEach((checkbox) => {
     (checkbox.nativeElement as HTMLInputElement).checked = false;
   });
-
-
   }
-
+  
 
   refreshData() { //refreshes changes in the data, gets the available data from database
     this.empService.getEmployee().subscribe(res => {
@@ -150,24 +164,88 @@ imageUrl:string=this.empService.employeeData.image?`http://localhost:5213${this.
   }
 
 
-  onHobbyChange(event: any, hobbyId: number) {
-    const checked = (event.target as HTMLInputElement).checked;
-    // Initialize hobbies if not present
-    let hobbiesArray = this.empService.employeeData.hobbies
-        ? this.empService.employeeData.hobbies.split(',').map(id => parseInt(id, 10))
-        : [];
-    if (checked) {
-        // Add the hobby ID if it's not already included
-        if (!hobbiesArray.includes(hobbyId)) {
-            hobbiesArray.push(hobbyId);
-        }
-    } else {
-        // Remove the hobby ID if it's unchecked
-        hobbiesArray = hobbiesArray.filter(id => id !== hobbyId);
+//   onHobbyChange(event: any, hobbyId: number) {
+//     const checked = (event.target as HTMLInputElement).checked;
+//     // Initialize hobbies if not present
+//     let hobbiesArray = this.empService.employeeData.hobbies
+//         ? this.empService.employeeData.hobbies.split(',').map(id => parseInt(id, 10))
+//         : [];
+//     if (checked) {
+//         // Add the hobby ID if it's not already included
+//         if (!hobbiesArray.includes(hobbyId)) {
+//             hobbiesArray.push(hobbyId);
+//         }
+//     } else {
+//         // Remove the hobby ID if it's unchecked
+//         hobbiesArray = hobbiesArray.filter(id => id !== hobbyId);
+//     }
+//     // Update the hobbies field as a comma-separated string of IDs
+//     this.empService.employeeData.hobbies = hobbiesArray.filter(id => id > 0).join(',');
+//      console.log('Updated hobbies:', this.empService.employeeData.hobbies);
+// }
+
+
+
+
+onHobbyChange(event: any, hobbyId: number) {
+  const checked = (event.target as HTMLInputElement).checked;
+
+  // Initialize hobbies if not present
+  let hobbiesArray = this.empService.employeeData.hobbies
+      ? this.empService.employeeData.hobbies.split(',').map(id => parseInt(id, 10))
+      : [];
+
+  if (checked) {
+    // Add the hobby ID if it's not already included
+    if (!hobbiesArray.includes(hobbyId)) {
+      hobbiesArray.push(hobbyId);
     }
-    // Update the hobbies field as a comma-separated string of IDs
-    this.empService.employeeData.hobbies = hobbiesArray.filter(id => id > 0).join(',');
+  } else {
+    // Remove the hobby ID if it's unchecked
+    hobbiesArray = hobbiesArray.filter(id => id !== hobbyId);
+  }
+
+  // Update the hobbies field as a comma-separated string of IDs
+  this.empService.employeeData.hobbies = hobbiesArray.filter(id => id > 0).join(',');
+  console.log('Updated hobbies:', this.empService.employeeData.hobbies);
 }
+
+
+
+
+
+isHobbySelected(hobbyId: number): boolean {
+  // If no hobbies are present, return false
+  if (!this.empService.employeeData.hobbies) {
+    return false;
+  }
+  // Parse hobbies into an array
+  const selectedHobbies = this.empService.employeeData.hobbies.split(',').map(id => parseInt(id, 10));
+  // Check if the given hobbyId is in the list
+  return selectedHobbies.includes(hobbyId); 
+}
+
+
+
+
+
+
+// isHobbySelected(hobbyName: string): boolean {
+//   // If no hobbies are present, return false
+//   if (!this.empService.employeeData.hobbies) {
+//     return false;
+//   }
+//   // Parse hobbies into an array
+//   const selectedHobbies = this.empService.employeeData.hobbies.split(',');
+//   // Check if the given hobbyId is in the list
+//   return selectedHobbies.includes(hobbyName); 
+// }
+
+
+
+
+
+
 
 
 
@@ -200,35 +278,23 @@ onImageSelected(event: any) {
 
 
 
-isHobbySelected(hobbyName: string): boolean {
-  // If no hobbies are present, return false
-  if (!this.empService.employeeData.hobbies) {
-    return false;
-  }
 
-  // Parse hobbies into an array
-  const selectedHobbies = this.empService.employeeData.hobbies.split(',');
-
-  // Check if the given hobbyId is in the list
-  return selectedHobbies.includes(hobbyName);
-
-  
-}
 
 
 
 //USED FOR CANCEL BUTTON, BUT SAME INCLUDES IN RESETFORM SO
-// onCancel(myform:NgForm){
-//   myform.form.reset();
-//   this.empService.employeeData = new Employee();
-//   this.empService.employeeData.hobbies ='';
-//   this.imageUrl = null;
-//   this.imageFromPar = null;
-//   const fileInput = document.getElementById('image') as HTMLInputElement;
-//   if (fileInput) {
-//     fileInput.value = ''; // Clear the file input of image after save or update
-//   }
-// }
+onCancel(myform:NgForm){
+  myform.form.reset();
+  this.empService.employeeData = new Employee();
+  this.empService.employeeData.hobbies ='';
+  this.imageUrl = null;
+  this.imageFromPar = null;
+  this.cancelClick.emit();
+  const fileInput = document.getElementById('image') as HTMLInputElement;
+  if (fileInput) {
+    fileInput.value = ''; // Clear the file input of image after save or update
+  }
+}
 
 
 }

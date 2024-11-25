@@ -30,10 +30,11 @@ export class EmployeeService {
   }
 
   UpdateEmployee(employeeData:any): Observable<any>{
+    console.log("Update employee data",employeeData);
     if (!this.employeeData.id) {
       throw new Error("Employee ID is undefined.");
     }
-    return this.http.put(`${this.employeeUrl}/${this.employeeData.id}`,this.employeeData); //Here, this.employeeUrl is the base URL for the employee API (e.g., https://localhost:4200/api/Employee).
+    return this.http.put(`${this.employeeUrl}/${this.employeeData.id}`,employeeData); //Here, this.employeeUrl is the base URL for the employee API (e.g., https://localhost:4200/api/Employee).
    // this.employeeData.id retrieves the ID of the employee you want to update. This ID is appended to the base URL to form the full URL. For example, if the ID is 123, the resulting URL might be https://localhost:4200/api/Employee/123.
   }
 
@@ -55,13 +56,14 @@ deleteEmployee(id:number):Observable<any> {
 }
 
   // Set hobbies for the employee, store hobby ids in employee table
-setHobbiesForEmployee() {
- if (!this.employeeData.id) {
-     throw new Error("Employee ID is undefined.");
-  }
-   const hobbyIds = this.employeeData.hobbies || [];
-  return this.http.post(`${this.employeeUrl}/${this.employeeData.id}/setHobbies`, hobbyIds);
-}
+// setHobbiesForEmployee() {
+//   debugger;
+//  if (!this.employeeData.id) {
+//      throw new Error("Employee ID is undefined.");
+//   }
+//    const hobbyIds = this.employeeData.hobbies || [];
+//   return this.http.post(`${this.employeeUrl}/${this.employeeData.id}/setHobbies`, hobbyIds);
+// }
 
 
 

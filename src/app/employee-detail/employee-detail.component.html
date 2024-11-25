@@ -1,6 +1,11 @@
 <div class="container">
-    <app-employee-form [imageFromPar]="imageEdit"></app-employee-form>
-</div>
+    <!-- Pass imageEdit to the employee-form as an input, and handle cancelClick event -->
+    <app-employee-form 
+      [imageFromPar]="imageEdit" 
+      (cancelClick)="resetImage()">
+    </app-employee-form>
+  </div>
+  
 
 <!-- <app-employee-form ></app-employee-form> -->
 
@@ -49,9 +54,10 @@
                 {{employee.age}}
             </td>
          
-             <td>
-                {{employee.hobbies}}
-             </td>
+            <td>
+                {{ employee.hobbies }}
+            </td>
+              
 
              <td>
                 <img [src]="'http://localhost:5213' + employee.image" alt="Employee Image" class="img-thumbnail" width="80" height="80" />
