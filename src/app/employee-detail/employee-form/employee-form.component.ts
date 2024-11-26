@@ -22,7 +22,7 @@ export class EmployeeFormComponent implements OnInit {
 isImageRequired:boolean=false;
 selectedImageName: string = '';
 
-
+//Output is used from child to parent
 @Output() cancelClick = new EventEmitter<void>();
 
 
@@ -102,6 +102,7 @@ constructor(public empService: EmployeeService) {
     }
   }
   
+
   //wehere subscribe is written there response is seen.
   insertEmployee(employeeData: any, myform: NgForm) {
     debugger;
@@ -113,7 +114,20 @@ constructor(public empService: EmployeeService) {
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error occurred:', error);
-        console.log('Validation Errors:', error.error.errors);
+
+      // Check if the error message corresponds to a duplicate email
+      if (error.status === 400 && error.error?.message === "The email is already in use by another employee.") {
+        alert("Duplicate Email: The email is already in use. Please use a different email.");
+      } 
+      else if (error.status === 400 && error.error?.errors) {
+        // Handling other validation errors (such as empty fields, incorrect data types, etc.)
+        const errorMessages = Object.values(error.error.errors).flat();
+        alert(`Validation Errors: \n${errorMessages.join('\n')}`);
+      }
+      else {
+        // Handle any other types of errors (like server errors or unexpected errors)
+        alert("An error occurred while saving the employee. Please try again.");
+      }
       }
     });
   }
@@ -128,9 +142,20 @@ constructor(public empService: EmployeeService) {
         this.refreshData();
         console.log('Employee updated successfully:', employeeData);
       },
-      error: (error: HttpErrorResponse) => {
+      // it checks if the error message from the server (located in error.error?.message) is specifically "The email is already in use by another employee."
+      error: (error: HttpErrorResponse) => { //arrow function
         console.error('Error occurred:', error);
-        console.log('Validation Errors:', error.error.errors);
+        if (error.status === 400 && error.error.message === "The email is already in use by another employee.") {
+          alert("The email is already in use. Please use a different email.");
+          //  error.error?.errors checks validation errors.
+        } else if (error.status === 400 && error.error?.errors) {
+          // Handling other validation errors (such as empty fields, incorrect data types, etc.)
+          const errorMessages = Object.values(error.error.errors).flat();
+          alert(`Validation Errors: \n${errorMessages.join('\n')}`);
+        } else {
+          // Handle any other types of errors (like server errors or unexpected errors)
+          alert("An error occurred while saving the employee. Please try again.");
+        }
       }
     });
   }
@@ -148,12 +173,10 @@ constructor(public empService: EmployeeService) {
   if (fileInput) {
     fileInput.value = ''; // Clear the file input of image after save or update
   }
-  
-
    // Manually uncheck all hobby checkboxes after save, added viewChildren for that
-    this.hobbyCheckboxes.forEach((checkbox) => {
-    (checkbox.nativeElement as HTMLInputElement).checked = false;
-  });
+  //   this.hobbyCheckboxes.forEach((checkbox) => {
+  //   (checkbox.nativeElement as HTMLInputElement).checked = false;
+  // });
   }
   
 
@@ -164,33 +187,26 @@ constructor(public empService: EmployeeService) {
   }
 
 
-//   onHobbyChange(event: any, hobbyId: number) {
-//     const checked = (event.target as HTMLInputElement).checked;
-//     // Initialize hobbies if not present
-//     let hobbiesArray = this.empService.employeeData.hobbies
-//         ? this.empService.employeeData.hobbies.split(',').map(id => parseInt(id, 10))
-//         : [];
-//     if (checked) {
-//         // Add the hobby ID if it's not already included
-//         if (!hobbiesArray.includes(hobbyId)) {
-//             hobbiesArray.push(hobbyId);
-//         }
-//     } else {
-//         // Remove the hobby ID if it's unchecked
-//         hobbiesArray = hobbiesArray.filter(id => id !== hobbyId);
-//     }
-//     // Update the hobbies field as a comma-separated string of IDs
-//     this.empService.employeeData.hobbies = hobbiesArray.filter(id => id > 0).join(',');
-//      console.log('Updated hobbies:', this.empService.employeeData.hobbies);
-// }
 
 
 
+//map() is an array method used to create a new array by applying a function to each element of the original array.
+//In this case, map() takes each element (which is initially a string from the split() result) and passes it through the function id => parseInt(id, 10).
+// split() is a string method that splits a "string into an array" based on the delimiter provided. In this case, it's using the comma (',') as the delimiter.
+// So, it takes the string in hobbies, splits it at each comma, and returns an array of strings. ["1,2,3"]=>["1","2","3"]
 
+//id => ... is an arrow function, which is a shorthand syntax for defining functions in JavaScript. 
+//Here, id represents each individual element (string) from the array resulting from split().
+//parseInt is a built-in JavaScript function that converts a "string to an integer". The 10 is the radix (base) for the conversion, 
+//which means it interprets the string as a base-10 number (decimal system).
+//For example, if id is the string "1", parseInt(id, 10) will convert it into the integer 1.
+
+//filter() is a method that creates a new array containing only the elements that pass a test.
+// The filter() method loops through each element in hobbiesArray and applies the provided function to each element.
 onHobbyChange(event: any, hobbyId: number) {
   const checked = (event.target as HTMLInputElement).checked;
 
-  // Initialize hobbies if not present
+  // Initialize hobbies if not present. 
   let hobbiesArray = this.empService.employeeData.hobbies
       ? this.empService.employeeData.hobbies.split(',').map(id => parseInt(id, 10))
       : [];
@@ -200,11 +216,12 @@ onHobbyChange(event: any, hobbyId: number) {
     if (!hobbiesArray.includes(hobbyId)) {
       hobbiesArray.push(hobbyId);
     }
-  } else {
-    // Remove the hobby ID if it's unchecked
+  }
+  //Not checked then 
+  else {
+    // Remove the hobby ID if it's unchecked. new aaray is assigned to hobbiesArray
     hobbiesArray = hobbiesArray.filter(id => id !== hobbyId);
   }
-
   // Update the hobbies field as a comma-separated string of IDs
   this.empService.employeeData.hobbies = hobbiesArray.filter(id => id > 0).join(',');
   console.log('Updated hobbies:', this.empService.employeeData.hobbies);
@@ -213,38 +230,20 @@ onHobbyChange(event: any, hobbyId: number) {
 
 
 
-
+//when hobby is selected (ticked checkboxes)
 isHobbySelected(hobbyId: number): boolean {
   // If no hobbies are present, return false
   if (!this.empService.employeeData.hobbies) {
     return false;
   }
-  // Parse hobbies into an array
+  // Parse hobbies into an array, string to array. "1" => 1.
   const selectedHobbies = this.empService.employeeData.hobbies.split(',').map(id => parseInt(id, 10));
   // Check if the given hobbyId is in the list
   return selectedHobbies.includes(hobbyId); 
 }
 
-
-
-
-
-
-// isHobbySelected(hobbyName: string): boolean {
-//   // If no hobbies are present, return false
-//   if (!this.empService.employeeData.hobbies) {
-//     return false;
-//   }
-//   // Parse hobbies into an array
-//   const selectedHobbies = this.empService.employeeData.hobbies.split(',');
-//   // Check if the given hobbyId is in the list
-//   return selectedHobbies.includes(hobbyName); 
-// }
-
-
-
-
-
+// The includes() method checks if the hobbyId is present in the selectedHobbies array. 
+//It returns true if the array contains hobbyId and false if it does not.
 
 
 

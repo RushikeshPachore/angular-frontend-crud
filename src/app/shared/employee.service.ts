@@ -55,16 +55,5 @@ deleteEmployee(id:number):Observable<any> {
     return this.http.delete(`${this.employeeUrl}/${id}`);
 }
 
-  // Set hobbies for the employee, store hobby ids in employee table
-// setHobbiesForEmployee() {
-//   debugger;
-//  if (!this.employeeData.id) {
-//      throw new Error("Employee ID is undefined.");
-//   }
-//    const hobbyIds = this.employeeData.hobbies || [];
-//   return this.http.post(`${this.employeeUrl}/${this.employeeData.id}/setHobbies`, hobbyIds);
-// }
-
-
 
 }
