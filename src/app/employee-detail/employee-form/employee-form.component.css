@@ -1,5 +1,6 @@
 .formAdd {
-  background: #c7b29e;
+ 
+  background: #66c7c7;
   color: #FFF;
   width: 100%;
   height: auto;
@@ -9,6 +10,9 @@
   overflow: hidden;
   margin-bottom: 20px; /* Add some spacing below the form */
 }
+
+label{color:white;
+font-weight: 500;}
 
 #toggle {
   appearance: none;
@@ -25,7 +29,7 @@
   width: 100px;
   border-radius: 3px;
   padding: 8px 10px;
-  color: #FFF;
+  color:black;
   line-height: 20px;
   font-size: 12px;
   text-align: center;
@@ -45,3 +49,20 @@
 /* #toggle:checked + label:after {
   content: "Close";
 } */
+
+#saveCancel{
+  margin-top: 20px;
+  padding: 10px;
+}
+
+#cancel{
+  margin-top: 10px;
+}
+
+#hobby{
+  margin: 10px;
+}
+
+#gender{
+  margin-top: 10px;
+}

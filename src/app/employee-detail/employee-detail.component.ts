@@ -58,17 +58,17 @@ export class EmployeeDetailComponent {
 } else {
   this.empService.employeeData.hobbies = ''; // Set to empty string if no hobbies exist
 }
-
 console.log("Hobbies for editing (as IDs):", this.empService.employeeData.hobbies);
-    // Parse hobbies if they exist, else set an empty string  
-    // this.empService.employeeData.hobbies = selectedEmployee.hobbies || '';
-    // console.log("Hobbies for editing:", this.empService.employeeData.hobbies);  
+  
     let df = this.datepipe.transform(selectedEmployee.doj, 'yyyy-MM-dd');
     this.empService.employeeData.doj = df;
+    
     this.empService.employeeData.password ='';
     // this.empService.employeeData.image = selectedEmployee.image || '';
     console.log('Selected image:',selectedEmployee.image);
     this.imageEdit=`http://localhost:5213${selectedEmployee.image}`;
+
+    
   }
 
 

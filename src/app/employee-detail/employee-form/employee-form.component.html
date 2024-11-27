@@ -4,49 +4,64 @@
 <div class="formAdd" >
     <form autocomplete="off" #myform="ngForm" (ngSubmit)="myform.form.valid && submit(myform)">
         <div class="container" >
-            <div class="row" style="margin: 20px;">
+            <div class="row" style="margin:20px;">
                 <div class="col-md-3">
                     <!-- property binding using [value] for getting dymnamic value -->
-                    <input type="hidden" name="id" [value]="empService.employeeData.id">
+                    <input  type="hidden" name="id" [value]="empService.employeeData.id">
 
-                    <label for="name" class="float-left">Name</label>
-                    <div *ngIf="name.invalid && (name.touched || name.dirty)" class="float-right" >
-                        <p class="text-danger">Required</p>
+
+                    <label for="name" class="float-left">
+                        Name <span class="text-danger">*</span>
+                    </label>
+                    <div *ngIf="name.invalid && (name.touched || name.dirty)" class="float-right"  >
+                       <p class="text-danger">Empty Spaces!!</p> 
                     </div>
-                        <!-- #name reference variable and ngModel for two way data binding -->
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter name" #name="ngModel" [(ngModel)]="empService.employeeData.name" required>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter name" #name="ngModel" [(ngModel)]="empService.employeeData.name" required  [ngModelOptions]="{ updateOn: 'blur' }"     noSpaceValidator>
+                    
+                        <!-- #name reference variable and ngModel for two way data binding -->  
+                </div>
+
+
+
+                <div class="col-md-3">
+                    <label for="lastName"  class="float-left">Last Name <span class="text-danger">*</span></label>
+                    <div *ngIf="lastname.invalid && (lastname.touched || lastname.dirty)" class="float-right" > 
+                        <p class="text-danger">Empty Spaces!!</p>                        
+                    </div>                                
+                    <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Enter last name" #lastname="ngModel" [(ngModel)]="empService.employeeData.lastName" required noSpaceValidator>
+                    
                 </div>
 
                 <div class="col-md-3">
-                    <label for="lastName"  class="float-left">Last Name</label>
-                    <div *ngIf="lastname.invalid && (lastname.touched || lastname.dirty)" class="float-right" >
-                        <p class="text-danger">Required</p>
-                    </div>
-                    <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Enter last name" #lastname="ngModel" [(ngModel)]="empService.employeeData.lastName" required>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="email"  class="float-left">Email</label>
-                    <div *ngIf="email.invalid && (email.touched || email.dirty)" class="float-right" >
-                        <p class="text-danger">Required</p>
+                    <label for="email"  class="float-left">Email <span class="text-danger">*</span></label>
+                    <div *ngIf="email.invalid && (email.touched || email.dirty)" class="float-right" >     
+                        <p class="text-danger">Invalid email!!</p>
                     </div>
                     <input type="email" id="email" name="email" class="form-control" placeholder="Enter email" #email="ngModel" [(ngModel)]="empService.employeeData.email"   pattern="[a-zA-Z0-9!#$%&amp;'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*"   required>
                 </div>
 
                 <div class="col-md-3">
-                    <label for="age">Age</label>
-                    <input type="number" id="age" name="age" class="form-control" placeholder="Enter age" #age="ngModel" [(ngModel)]="empService.employeeData.age" required>
+                    <label for="age" class="float-left">Age<span class="text-danger">*</span></label>            
+                    <div *ngIf="age.invalid && (age.touched || age.dirty)" class="float-right">
+                        <!-- <div *ngIf="age.errors?.['age.required']">Age is required</div> -->
+                        <div *ngIf="age.errors?.['ageGreaterThan18']" class="text-danger">Age > 18!!</div>
+                    </div>
+                    <input type="number" id="age" name="age" class="form-control" placeholder="Enter age" #age="ngModel" [(ngModel)]="empService.employeeData.age" required ageGreaterThan18>
                 </div>
                 
                 <div class="col-md-3">
-                    <label for="doj" class="label">Date of Joining</label>
+                    <label for="doj" class="label">Date of Joining<span class="text-danger">*</span></label>
+                    <div *ngIf="doj.invalid && (doj.touched || doj.dirty)" class="float-right">
+                       
+                        <div class="text-danger">Doj Required</div>
+                    </div>
                     <input type="date" id="doj" name="doj" class="form-control" #doj="ngModel" [(ngModel)]="empService.employeeData.doj" required>
                 </div>
             
                 <div class="col-md-3">
-                    <label for="designation">Designation</label>
-                    <div *ngIf="designationID.touched && (empService.employeeData.designationID===0)" class="float-right">
-                        <p class="text-danger">Required </p>
+                    <label for="designation">Designation<span class="text-danger">*</span></label>
+
+                    <div *ngIf="designationID.touched && (empService.employeeData.designationID===0)" class="float-right">              
                     </div>
                     <select name="designationID" class="form-control" #designationID="ngModel" [(ngModel)]="empService.employeeData.designationID" id="designation" required>
                         <option >Select designation</option>
@@ -56,19 +71,29 @@
 
 
                 <div class="col-md-3">
-                    <label for="password"class="float-left">Password</label>
+                    <label for="password"class="float-left">Password<span class="text-danger">*</span></label>
+                    <div *ngIf="password.invalid && (password.touched || password.dirty)" class="float-right">                       
+                        <div class="text-danger"></div>
+                    </div>
                     <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password" #password="ngModel" [(ngModel)]="empService.employeeData.password">
                 </div>
+
+
  <!-- using <input type="image"> which is meant for image buttons, not for file uploads. 
   Instead, you should use <input type="file"> for uploading an image. -->
                     <div class="col-md-3">
                         <label for="image" class="float-left">Image</label>
 
-                        <div class="float-right">
-                            <p class="text-danger" *ngIf="isImageRequired ">Image is required</p>
+                        <div  class="float-right">
+                            <div  *ngIf="(isImageRequired && image.invalid) || (image.touched && image.dirty) ">
+                            <!-- <div class="text-danger"> </div>   -->
+                            </div>
                         </div>
+                        <!-- <div *ngIf="image.invalid || (image.touched && image.dirty)">
+                            <p class="text-danger">Select image</p>
+                        </div> -->
 
-                        <input type="file" accept="image/*" (change)="onImageSelected($event)" id="image" name="image" class="form-control"   required>
+                        <input type="file" accept="image/*" (change)="onImageSelected($event)" id="image" name="image" class="form-control" #image="ngModel" [(ngModel)]="empService.employeeData.image" >
                         
                         <!-- while posting -->
                         <span *ngIf="imageUrl">
@@ -82,42 +107,46 @@
 
                     </div>
 
-                    <div class="col-md-3">
-                    <label for="gender">Gender</label>
+                    <div class="col-md-3" id="gender">
+                    <label for="gender">Gender<span class="text-danger">*</span></label>
                     <div class="row">
+                        <div *ngIf="gender.invalid && gender.touched" class="float-right">                       
+                            <div class="text-danger">Gender Required</div>
+                        </div>
                         <div class="form-check form-check-inline ">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="gender" #gender="ngModel" [(ngModel)]="empService.employeeData.gender" value="Male" > Male
+                                <input type="radio" class="form-check-input" name="gender" #gender="ngModel" [(ngModel)]="empService.employeeData.gender" value="Male" required> Male
                             </label>
                         </div>
                         <!-- //put input in label for radio button so they appear side by side -->
                         <div class="form-check form-check-inline ">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="gender" #gender="ngModel" [(ngModel)]="empService.employeeData.gender" value="Female"> Female
+                                <input type="radio" class="form-check-input" name="gender" #gender="ngModel" [(ngModel)]="empService.employeeData.gender" value="Female" required> Female
                             </label>
                         </div>
                         </div>
                     </div>
                
       
-          <div class="col-md-8">
+          <div class="col-md-6" id="hobby">
             <div class="form-check form-check-inline">
-              <label>Select Hobby:</label>
+              <label>Select Hobby<span class="text-danger">*</span></label>
+              <br>
               <div *ngFor="let hobby of empService.listHobbies">
-                <input #hobbyCheckbox  type="checkbox" [checked]="isHobbySelected(hobby.hobbyId)" (change)="onHobbyChange($event, hobby.hobbyId)" />                                
+                <input #hobbyCheckbox  type="checkbox" [checked]="isHobbySelected(hobby.hobbyId)" (change)="onHobbyChange($event, hobby.hobbyId)" required/>                                
                 <label>{{ hobby.hobbyName }}</label>
               </div>
             </div>
           </div>  
           
           <br>
-          <div class="row"> 
-            <div class="col-md-6 float-right">
-                <button type="submit" [disabled]="designationID.value===0" class="btn btn-success btn-block">Save</button>
+          <div class=col-md-2 id="saveCancel"> 
+            <div >
+                <button type="submit" [disabled]="!myform.valid || !isAnyHobbySelected()"  class="btn btn-success btn-block">Save</button>
             </div>    
-            <div class="col-md-6 ">
+            <div >
                 <!-- ALSO onCancel method can be used to reset -->
-                <button type="button" (click)="onCancel(myform)"  class="btn btn-danger btn-block">Cancel</button>
+                <button type="button" (click)="onCancel(myform)" id="cancel"  class="btn btn-danger btn-block">Cancel</button>
             </div>
          </div>  
 

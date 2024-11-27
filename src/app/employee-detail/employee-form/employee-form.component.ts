@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { HtmlParser } from '@angular/compiler';
 import {  Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { AbstractControl, NgForm, ValidationErrors } from '@angular/forms';
 import { Designation, Employee } from 'src/app/shared/employee.model';
 import { EmployeeService } from 'src/app/shared/employee.service';
 
@@ -74,10 +74,7 @@ constructor(public empService: EmployeeService) {
       alert("Please select a designation.");
       return;
     } 
-
-      // Convert hobbies array back to a comma-separated string
-
-
+    // Convert hobbies array back to a comma-separated string
     // Prepare the employee data payload
     const employeeData = {
       id: this.empService.employeeData.id,
@@ -90,7 +87,7 @@ constructor(public empService: EmployeeService) {
       password:form.value.password,
       designationID: form.value.designationID,
       hobbies:  this.empService.employeeData.hobbies,  //checkbox so access this way
-      image:this.empService.employeeData.image //file type
+      image:this.empService.employeeData.image         //file type
     };
 
     console.log('Employee Data to send:', employeeData);
@@ -246,6 +243,11 @@ isHobbySelected(hobbyId: number): boolean {
 //It returns true if the array contains hobbyId and false if it does not.
 
 
+isAnyHobbySelected():boolean{
+  
+    return this.empService.employeeData.hobbies.length>0;
+
+}
 
 
 //A FileReader object is created. FileReader is an API that allows reading files from the user's local file system. In this case, it's used to read the image as a base64-encoded string.
@@ -294,6 +296,8 @@ onCancel(myform:NgForm){
     fileInput.value = ''; // Clear the file input of image after save or update
   }
 }
+
+
 
 
 }
