@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Designation, Employee, Hobbies } from './employee.model';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 // import { Designation } from './designation.model';
 
 @Injectable({
@@ -11,6 +11,7 @@ export class EmployeeService {
   
   constructor(private http:HttpClient) { } //http object for crud operation
 
+  imageUrl:string= 'http://localhost:5213/api/Image';
   employeeUrl: string = 'http://localhost:5213/api/Employees';  //api endpoint for managing employee data.port number is from backend
   designationUrl:string='http://localhost:5213/api/Designation';
   hobbyUrl:string='http://localhost:5213/api/Hobbies';
@@ -21,10 +22,11 @@ export class EmployeeService {
 
   employeeData:Employee=new Employee(); //to post data
 
+
   saveEmployee(employee:any): Observable<any>{ 
     return this.http.post(this.employeeUrl,employee); 
   }
-
+//
   getEmployeeById(employeeId: number): Observable<Employee> {
     return this.http.get<Employee>(`${this.employeeUrl}/${employeeId}`);
   }
@@ -54,6 +56,56 @@ getDesignation():Observable<Designation[]>{ //WE USE return type as OBSERVABLE F
 deleteEmployee(id:number):Observable<any> {
     return this.http.delete(`${this.employeeUrl}/${id}`);
 }
+
+
+
+getImages(employeeId: number): Observable<string[]> {
+  return this.http.get<string[]>(`http://localhost:5213/api/Image/Employee/${employeeId}`);
+}
+
+// getImages(employeeId: number): Observable<{ id: number; multiImage: string }[]> {
+//   return this.http.get<{ id: number; multiImage: string }[]>(
+//     `http://localhost:5213/api/Image/Employee/${employeeId}`
+//   );
+// }
+
+
+
+// uploadImages(employeeId: number, imageFiles: File[]): Observable<any> {
+//   const formData = new FormData();
+//   formData.append('employeeId', employeeId.toString());
+  
+//   imageFiles.forEach(file => {
+//     formData.append('images', file); // 'images' matches the backend's expected field name
+//   });
+
+//   return this.http.post(`http://localhost:5213/api/Image/Upload`, formData);
+// }
+
+
+
+
+uploadImages(employeeId: number, imageFiles: File[]) {
+  const formData = new FormData();
+  formData.append('employeeId', employeeId.toString());
+  imageFiles.forEach((file) => {
+    formData.append('images', file, file.name);
+  });
+  return this.http.post('http://localhost:5213/api/Image/Upload', formData, {
+    headers: {
+      // Do not include `Content-Type` header as Angular automatically sets it for FormData
+    },
+  });
+}
+
+
+
+removeImages(employeeId:number,imageId:number[]): Observable<any>
+{ debugger;
+  return this.http.post<any>(`http://localhost:5213/api/Image/removeImages/${employeeId}`,imageId)
+}
+
+
 
 
 }

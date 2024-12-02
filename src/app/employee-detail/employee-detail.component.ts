@@ -12,12 +12,16 @@ import { EmployeeFormComponent } from './employee-form/employee-form.component';
 })
 export class EmployeeDetailComponent {
 
+  isEditing=false;
+
+isDeleteEnabled=false;
+updateCheckboxState(isChecked: boolean) {
+  this.isDeleteEnabled = isChecked; // Enable delete only if checkbox is checked
+}
   @ViewChild('myform') myform: NgForm;
 
-  // @ViewChild(EmployeeFormComponent) employeeComponent:EmployeeFormComponent;
-
   availableHobbies: any[] = [];
-  imageEdit:string='';
+  imageShow:string []=[];
   constructor(public empService:EmployeeService, public datepipe:DatePipe){
   }
 
@@ -28,11 +32,22 @@ export class EmployeeDetailComponent {
       //all the data is stored in 'data' variable using subscribe first then we passs that data variable to listEmployee created in service.
       //after that list is rendered in employee-detail.html using ngFor  //subscribe to retrive data
       // Fetch available hobbies from the service or backend
+
+      this.empService.listEmployee.forEach(employee => {
+        this.empService.getImages(employee.id).subscribe(images => {
+          employee.image = images.map(img => `http://localhost:5213/${img}`);
+        });
+      });
+
+
     this.empService.getHobbies().subscribe(hobbies => {
       this.availableHobbies = hobbies;
-      console.log('Available Hobbies:', hobbies);
-
+      console.log('Available Hobbies:', hobbies); 
     });
+
+
+
+
     });
   }
 
@@ -40,7 +55,8 @@ export class EmployeeDetailComponent {
   //this.empService.employeeData is assigned a shallow copy of selectedEmployee.
   //The syntax { ...selectedEmployee } uses the spread operator to create a new object with the same properties as selectedEmployee.
   edit(selectedEmployee: Employee) 
-  { debugger;
+  { 
+    this.isEditing=true;
     this.empService.employeeData = {...selectedEmployee} 
     console.log("empdata:",this.empService.employeeData)
 
@@ -61,14 +77,16 @@ export class EmployeeDetailComponent {
 console.log("Hobbies for editing (as IDs):", this.empService.employeeData.hobbies);
   
     let df = this.datepipe.transform(selectedEmployee.doj, 'yyyy-MM-dd');
-    this.empService.employeeData.doj = df;
-    
+    this.empService.employeeData.doj = df;   
     this.empService.employeeData.password ='';
-    // this.empService.employeeData.image = selectedEmployee.image || '';
-    console.log('Selected image:',selectedEmployee.image);
-    this.imageEdit=`http://localhost:5213${selectedEmployee.image}`;
+   
+    //Image Editing
+    this.empService.getImages(selectedEmployee.id).subscribe(images => {
+      // Map the image URLs to the employeeData
+      this.imageShow = images.map(img => `http://localhost:5213/${img}`);
+      console.log('Images for editing:', this.imageShow);
+    });
 
-    
   }
 
 
@@ -82,7 +100,7 @@ console.log("Hobbies for editing (as IDs):", this.empService.employeeData.hobbie
           this.empService.listEmployee = this.empService.listEmployee.filter(employee => employee.id !== id);
           // Reset the employee data in the service after successful deletion
           this.empService.employeeData = new Employee(); // Clear the employee data
-          this.imageEdit='';
+         this.imageShow=[];
           // Optionally, reset the form controls using the reset() method
           this.myform.reset(); // This will reset the form fields
           // This will instantly reflect the change in the UI
@@ -125,25 +143,11 @@ console.log("Hobbies for editing (as IDs):", this.empService.employeeData.hobbie
   }
   
   
-  
-  // getHobbiesNames(selectedEmployee: Employee): string {
-  //   debugger;
-  //   if (!selectedEmployee || !selectedEmployee.hobbies) {
-  //     return 'No hobbies available';
-  //   }
-  //   // Split the hobbies string into an array and convert to numbers
-  //   const hobbyIds = selectedEmployee.hobbies.split(',').map(hobby => parseInt(hobby, 10)).filter(h => !isNaN(h));
-  //   // Map hobby IDs to hobby names
-  //   const hobbyNames = hobbyIds.map(hobbyId => {
-  //     const hobby = this.empService.listHobbies.find(h => h.hobbyId === hobbyId);
-  //     return hobby ? hobby.hobbyName : null;
-  //   }).filter(name => name); // Filter out any null values
-  //   return hobbyNames.length > 0 ? hobbyNames.join(',') : 'No hobbies available';
-  // }
+
 
 
   resetImage() {
-    this.imageEdit = null;  // Reset imageEdit
+    // this.imageEdit = null;  // Reset imageEdit
     console.log('Image reset!');
   }
 

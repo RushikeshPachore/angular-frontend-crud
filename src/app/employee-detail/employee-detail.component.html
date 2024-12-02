@@ -1,8 +1,10 @@
 <div class="container">
     <!-- Pass imageEdit to the employee-form as an input, and handle cancelClick event -->
     <app-employee-form 
-      [imageFromPar]="imageEdit" 
-      (cancelClick)="resetImage()">
+    [remove]="isEditing"
+      [imageFromPar]="imageShow" 
+      (cancelClick)="resetImage()"
+      (checkboxStateChange)="updateCheckboxState($event)">
     </app-employee-form>
   </div>
   
@@ -59,10 +61,20 @@
             </td>
               
 
-             <td>
-                <img [src]="'http://localhost:5213' + employee.image" alt="Employee Image" class="img-thumbnail" width="80" height="80" />
+             <!-- <td *ngFor=" let list of imageShow"> -->
+                <!-- <img [src]="list" alt="Employee Image" class="img-thumbnail" width="40" height="40" /> -->
+                 <!-- [src]="image" -->
+            <td>
+                <div *ngIf="employee.image?.length > 0">
+                    <img *ngFor="let image of employee.image"   [src]="image"  alt="Employee Image" class="img-thumbnail" width="50" height="50" />
+                  </div>
+                  <div *ngIf="!employee.image || employee.image.length === 0">
+                    No Image
+                  </div>
 
-             </td>
+            </td>
+
+             <!-- so now we have to show images in my table, this is different compo emp-detail compo, so how do we get that images of that employe an dshow in there -->
                                               
                 <td>
                     <div class="dropdown">
@@ -71,7 +83,7 @@
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <button class="dropdown-item" type="button" (click)="edit(employee)">Edit</button>
-                        <button class="dropdown-item" type="button" (click)="delete(employee.id)">Delete</button>
+                        <button class="dropdown-item" [disabled]="!isDeleteEnabled" type="button" (click)="delete(employee.id)">Delete</button>
                       </div>
                     </div>
                 </td>

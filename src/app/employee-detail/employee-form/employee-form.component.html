@@ -14,9 +14,9 @@
                         Name <span class="text-danger">*</span>
                     </label>
                     <div *ngIf="name.invalid && (name.touched || name.dirty)" class="float-right"  >
-                       <p class="text-danger">Empty Spaces!!</p> 
+                       <p class="text-danger">Empty!!</p> 
                     </div>
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter name" #name="ngModel" [(ngModel)]="empService.employeeData.name" required  [ngModelOptions]="{ updateOn: 'blur' }"     noSpaceValidator>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter name" #name="ngModel" [(ngModel)]="empService.employeeData.name" required     noSpaceValidator>
                     
                         <!-- #name reference variable and ngModel for two way data binding -->  
                 </div>
@@ -26,7 +26,7 @@
                 <div class="col-md-3">
                     <label for="lastName"  class="float-left">Last Name <span class="text-danger">*</span></label>
                     <div *ngIf="lastname.invalid && (lastname.touched || lastname.dirty)" class="float-right" > 
-                        <p class="text-danger">Empty Spaces!!</p>                        
+                        <p class="text-danger">Empty!!</p>                        
                     </div>                                
                     <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Enter last name" #lastname="ngModel" [(ngModel)]="empService.employeeData.lastName" required noSpaceValidator>
                     
@@ -83,29 +83,36 @@
   Instead, you should use <input type="file"> for uploading an image. -->
                     <div class="col-md-3">
                         <label for="image" class="float-left">Image</label>
-
+                        
                         <div  class="float-right">
                             <div  *ngIf="(isImageRequired && image.invalid) || (image.touched && image.dirty) ">
                             <!-- <div class="text-danger"> </div>   -->
                             </div>
                         </div>
-                        <!-- <div *ngIf="image.invalid || (image.touched && image.dirty)">
-                            <p class="text-danger">Select image</p>
-                        </div> -->
 
-                        <input type="file" accept="image/*" (change)="onImageSelected($event)" id="image" name="image" class="form-control" #image="ngModel" [(ngModel)]="empService.employeeData.image" >
+                        <input type="file" accept="image/*" (change)="onImageSelected($event)" id="image" multiple name="image" class="form-control" #image="ngModel" [(ngModel)]="empService.employeeData.image" >
                         
-                        <!-- while posting -->
-                        <span *ngIf="imageUrl">
-                            <img [src]="imageUrl" alt="Employee Image" class="img-thumbnail" width="100" height="100" />
-                        </span>
-
+                        <!-- for posting -->
+                        <div *ngFor="let preview of imagePreviews">
+                            <img [src]="preview" alt="Image preview" class="img-thumbnail" width="80" height="80" />
+                            <!-- <input type="checkbox" class="checkbox" > -->
+                        </div>
+                              
                         <!-- executed when editing -->
-                        <span *ngIf="imageFromPar">
-                            <img [src]= "imageFromPar" alt="Employee Image"  class="img-thumbnail" width="100" height="100" />
-                        </span>
+                        
+                        <div *ngIf="imageFromPar">
+                           
+                            <div *ngFor="let img of imageFromPar; let i =index">
+                              <img [src]="img" alt="Employee Image" class="img-thumbnail" width="80" height="80" />
+                              <input type="checkbox" class="checkbox" (change)="onChecktick(i,$event)"  > 
+                            </div> 
 
-                    </div>
+                        </div>
+                        <div *ngIf="remove">
+                            <button (click)="removeImage(this.empService.employeeData.id)">Remove</button>   
+                        </div>
+                    
+                    </div> 
 
                     <div class="col-md-3" id="gender">
                     <label for="gender">Gender<span class="text-danger">*</span></label>
@@ -137,7 +144,13 @@
                 <label>{{ hobby.hobbyName }}</label>
               </div>
             </div>
-          </div>  
+          </div>
+          <!-- //checked while saving form then only delete button will be enable for us to delete, otherwise not enabled, so issue is this checkbox is create in other html and delete is in other component html -->
+
+          <div class="col-md-3">
+            <label>isReview</label>
+            <input type="checkbox" [checked]="isChecked" (change)="onCheckboxChange($event)">
+          </div>
           
           <br>
           <div class=col-md-2 id="saveCancel"> 
