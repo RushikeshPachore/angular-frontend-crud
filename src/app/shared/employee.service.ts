@@ -59,29 +59,19 @@ deleteEmployee(id:number):Observable<any> {
 
 
 
-getImages(employeeId: number): Observable<string[]> {
-  return this.http.get<string[]>(`http://localhost:5213/api/Image/Employee/${employeeId}`);
+// getImages(employeeId: number): Observable<string[]> {
+//   return this.http.get<string[]>(`http://localhost:5213/api/Image/Employee/${employeeId}`);
+// }
+
+
+getImages(employeeId: number):Observable<{ id:number; url:string }[]> {
+  debugger;
+  const apiUrl = `http://localhost:5213/api/Image/Employee/${employeeId}`;
+  console.log("apiUrl,",apiUrl);
+  return this.http.get<{ id:number; url:string }[]>(
+    apiUrl
+  );
 }
-
-// getImages(employeeId: number): Observable<{ id: number; multiImage: string }[]> {
-//   return this.http.get<{ id: number; multiImage: string }[]>(
-//     `http://localhost:5213/api/Image/Employee/${employeeId}`
-//   );
-// }
-
-
-
-// uploadImages(employeeId: number, imageFiles: File[]): Observable<any> {
-//   const formData = new FormData();
-//   formData.append('employeeId', employeeId.toString());
-  
-//   imageFiles.forEach(file => {
-//     formData.append('images', file); // 'images' matches the backend's expected field name
-//   });
-
-//   return this.http.post(`http://localhost:5213/api/Image/Upload`, formData);
-// }
-
 
 
 
@@ -100,9 +90,9 @@ uploadImages(employeeId: number, imageFiles: File[]) {
 
 
 
-removeImages(employeeId:number,imageId:number[]): Observable<any>
+removeImages(employeeId:number,imageIds:number[]): Observable<any>
 { debugger;
-  return this.http.post<any>(`http://localhost:5213/api/Image/removeImages/${employeeId}`,imageId)
+  return this.http.post<any>(`http://localhost:5213/api/Image/removeImages/${employeeId}`,imageIds)
 }
 
 

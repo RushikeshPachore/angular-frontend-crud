@@ -94,7 +94,7 @@
                         
                         <!-- for posting -->
                         <div *ngFor="let preview of imagePreviews">
-                            <img [src]="preview" alt="Image preview" class="img-thumbnail" width="80" height="80" />
+                            <img [src]="preview.url" alt="Image preview" class="img-thumbnail" width="80" height="80" />
                             <!-- <input type="checkbox" class="checkbox" > -->
                         </div>
                               
@@ -102,9 +102,9 @@
                         
                         <div *ngIf="imageFromPar">
                            
-                            <div *ngFor="let img of imageFromPar; let i =index">
-                              <img [src]="img" alt="Employee Image" class="img-thumbnail" width="80" height="80" />
-                              <input type="checkbox" class="checkbox" (change)="onChecktick(i,$event)"  > 
+                            <div *ngFor="let img of imageFromPar">
+                              <img [src]="img.url" alt="Employee Image" class="img-thumbnail" width="80" height="80" />
+                              <input type="checkbox" class="checkbox" (change)="onChecktick(img.id,$event)"  > 
                             </div> 
 
                         </div>

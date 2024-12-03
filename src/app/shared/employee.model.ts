@@ -10,7 +10,7 @@ export class Employee {
     designation:Designation;
     hobbies: string='';
     password:string='';
-    image:string[]=[];
+    image:{id:number; url:string}[]=[];
 }
 
 export class Designation {

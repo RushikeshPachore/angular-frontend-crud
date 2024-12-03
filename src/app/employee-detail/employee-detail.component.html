@@ -2,7 +2,7 @@
     <!-- Pass imageEdit to the employee-form as an input, and handle cancelClick event -->
     <app-employee-form 
     [remove]="isEditing"
-      [imageFromPar]="imageShow" 
+    [imageFromPar]="imageShow"
       (cancelClick)="resetImage()"
       (checkboxStateChange)="updateCheckboxState($event)">
     </app-employee-form>
@@ -10,7 +10,7 @@
   
 
 <!-- <app-employee-form ></app-employee-form> -->
-
+<!--   -->
 
 
 <div class="container">
@@ -31,7 +31,7 @@
         <th>Actions</th>
     </tr>
 </thead>
-    <tbody>
+        <tbody>
         <tr *ngFor="let employee of empService.listEmployee">
             <td>
                 {{employee.name}}
@@ -65,14 +65,15 @@
                 <!-- <img [src]="list" alt="Employee Image" class="img-thumbnail" width="40" height="40" /> -->
                  <!-- [src]="image" -->
             <td>
-                <div *ngIf="employee.image?.length > 0">
-                    <img *ngFor="let image of employee.image"   [src]="image"  alt="Employee Image" class="img-thumbnail" width="50" height="50" />
-                  </div>
-                  <div *ngIf="!employee.image || employee.image.length === 0">
+            
+                <div *ngIf="employee.image && employee.image.length > 0">
+                    <img *ngFor="let image of employee.image" [src]="image.url" alt="Employee Image" class="img-thumbnail" width="50" height="50" />
+                </div>
+                <div *ngIf="!employee.image || employee.image.length === 0">
                     No Image
-                  </div>
-
+                </div>
             </td>
+                  
 
              <!-- so now we have to show images in my table, this is different compo emp-detail compo, so how do we get that images of that employe an dshow in there -->
                                               

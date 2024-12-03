@@ -21,10 +21,14 @@ export class EmployeeFormComponent implements OnInit {
 //included to uncheck the hobby checkboxes after save manually
 @ViewChildren('hobbyCheckbox') hobbyCheckboxes: QueryList<ElementRef>;
 
-selectedImageIds:number[]=[];  
+
 imageIds:any[]=[];
 imageFiles:File[]=[];
-imagePreviews:string[]=[];
+
+//for Image editing and posting
+imagePreviews:{id:number; url:string}[]=[];
+selectedImageIds:number[]=[];  
+
 isImageRequired:boolean=false;
 selectedImageName: string = '';
 images: { id: number; path: string }[] = [];
@@ -34,7 +38,7 @@ isChecked = false;
 //Output is used from child to parent
 @Output() cancelClick = new EventEmitter<void>();
 //viewing image while editing. Input for child component. this is child of detail component
-@Input() imageFromPar:string[]=[];
+@Input() imageFromPar:{id:number; url:string}[]=[];
 @Input() remove:any;
 
 
@@ -61,17 +65,18 @@ constructor(public empService: EmployeeService) {
             this.empService.employeeData = employee;
             
 
-            this.empService.getImages(this.empService.employeeData.id).subscribe(images => {
-              this.imagePreviews = images.map(img => `http://localhost:5213/${img}`);
-            });
-
+            this.empService.getImages(this.empService.employeeData.id).subscribe((data) => {
+              this.imagePreviews = data.map(img => ({  ...img,
+                url: img.url.startsWith('http://localhost:5213') ? img.url : `http://localhost:5213${img.url}` }));
+            });            
+            console.log("image preview :", this.imagePreviews);
        
            
 
-            this.empService.employeeData.hobbies = employee.hobbies
+           this.empService.employeeData.hobbies = employee.hobbies
             ? employee.hobbies.split(',').filter(h => h).join(',')
             : '';
-           //this.imageUrl=this.empService.employeeData.image?`http://localhost:5213${this.empService.employeeData.image}`: '';
+        
             
           });
         }
@@ -226,11 +231,26 @@ onImageSelected(event: any): void {
   this.imagePreviews = []; // Clear previous previews
 
   // Generate base64 previews for each selected file
-  for (const file of this.imageFiles) {
+  // for (const file of this.imageFiles) {
+  //   const reader = new FileReader();
+  //   reader.onload = () => {
+  //     const base64String = reader.result as string;
+  //     this.imagePreviews.push(base64String); // Add to previews
+  //   };
+  //   reader.onerror = (error) => {
+  //     console.error('Error reading image file:', error);
+  //   };
+  //   reader.readAsDataURL(file); // Read file as base64
+  // }
+
+
+   // Generate previews with id and url
+   for (let i = 0; i < this.imageFiles.length; i++) {
+    const file = this.imageFiles[i];
     const reader = new FileReader();
     reader.onload = () => {
       const base64String = reader.result as string;
-      this.imagePreviews.push(base64String); // Add to previews
+      this.imagePreviews.push({ id: i, url: base64String }); // Add id and url
     };
     reader.onerror = (error) => {
       console.error('Error reading image file:', error);
@@ -244,14 +264,14 @@ onImageSelected(event: any): void {
 
 
   //Toggle selection of image checkboxes
-  onChecktick(imageId: any, event: Event) {
+  onChecktick(imageUrl: number, event: Event) {
     const checkbox = (event.target as HTMLInputElement);
     if (checkbox.checked) {
       // Add imageId to selectedImageIds when checked
-      this.selectedImageIds.push(imageId);
+      this.selectedImageIds.push(imageUrl);
     } else {
       // Remove imageId from selectedImageIds when unchecked
-      const index = this.selectedImageIds.indexOf(imageId);
+      const index = this.selectedImageIds.indexOf(imageUrl);
       if (index !== -1) {
         this.selectedImageIds.splice(index, 1);
       }
@@ -307,11 +327,14 @@ onImageSelected(event: any): void {
       this.empService.listEmployee = res;
 
       for (let employee of this.empService.listEmployee) {
-        this.empService.getImages(employee.id).subscribe(images => {
-          employee.image = images.map(img => `http://localhost:5213/${img}`);
+        this.empService.getImages(employee.id).subscribe((images) => {
+          // Update the image property with fresh data
+          employee.image = images.map(img => ({
+            ...img,
+            url: `http://localhost:5213${img.url}` // Ensure correct URL formatting
+          }));
         });
       }
-
       
     });
   }

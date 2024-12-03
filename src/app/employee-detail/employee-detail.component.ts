@@ -21,23 +21,42 @@ updateCheckboxState(isChecked: boolean) {
   @ViewChild('myform') myform: NgForm;
 
   availableHobbies: any[] = [];
-  imageShow:string []=[];
+  imageShow:{id:number; url:string} []=[];
   constructor(public empService:EmployeeService, public datepipe:DatePipe){
   }
 
   ngOnInit(){
-    this.empService.getEmployee().subscribe(data=>{   
+    this.empService.getEmployee().subscribe((data)=>{   
       this.empService.listEmployee=data;     
-      console.log('Employee Data:', data); 
+      console.log('Employee Data:',  this.empService.listEmployee); 
       //all the data is stored in 'data' variable using subscribe first then we passs that data variable to listEmployee created in service.
       //after that list is rendered in employee-detail.html using ngFor  //subscribe to retrive data
       // Fetch available hobbies from the service or backend
-
+            
       this.empService.listEmployee.forEach(employee => {
-        this.empService.getImages(employee.id).subscribe(images => {
-          employee.image = images.map(img => `http://localhost:5213/${img}`);
-        });
+        if (employee.id > 0) { // Ensure valid employee ID
+          this.empService.getImages(employee.id).subscribe(
+            (images) => {
+              // Prefix the URL if it's a relative path
+              employee.image = images.map(img => ({
+                ...img,
+                url: img.url.startsWith('http://localhost:5213') ? img.url : `http://localhost:5213${img.url}`
+              }));
+              
+              console.log("Fetched images for employee:", employee.id, employee.image);
+            },
+            (error) => {
+              console.error(`Error fetching images for employee ${employee.id}:`, error);
+              employee.image = []; // Default to empty array in case of error
+            }
+          );
+        } else {
+          console.warn(`Invalid employee ID: ${employee.id}`);
+        }
       });
+      
+
+
 
 
     this.empService.getHobbies().subscribe(hobbies => {
@@ -45,10 +64,10 @@ updateCheckboxState(isChecked: boolean) {
       console.log('Available Hobbies:', hobbies); 
     });
 
+  });
 
 
-
-    });
+    
   }
 
 
@@ -80,10 +99,15 @@ console.log("Hobbies for editing (as IDs):", this.empService.employeeData.hobbie
     this.empService.employeeData.doj = df;   
     this.empService.employeeData.password ='';
    
+
+    // this.empService.getImages(this.empService.employeeData.id).subscribe((data) => {
+    //   this.imagePreviews = data.map(img => ({ ...img, url: `http://localhost:5213/${img.url}` }));
+    // });
+    
     //Image Editing
     this.empService.getImages(selectedEmployee.id).subscribe(images => {
       // Map the image URLs to the employeeData
-      this.imageShow = images.map(img => `http://localhost:5213/${img}`);
+      this.imageShow = images.map(img => ({ ...img, url: `http://localhost:5213/${img.url}` }));
       console.log('Images for editing:', this.imageShow);
     });
 
