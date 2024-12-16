@@ -1,0 +1,33 @@
+<div class="container">
+    <h2>Categories and Subcategories</h2>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Category Id</th>
+          <th>Category Name</th>
+          <th>SubCategory Name</th>
+          <!-- <th>Subcategory Name</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of categoryService.listCategory">
+          <!-- This will display the category name and span the rows based on the number of subcategories -->
+          <td >{{ category.id  }}</td>
+          <td >{{ category.categories }}</td>
+          
+          <ul>
+            <li *ngFor="let sub of category.subCategories">
+              {{sub.subCategories}}
+            </li>
+          </ul>
+          
+        </tr>
+      </tbody>
+    </table>
+
+    <button (click)="navigate()" >Back</button>
+
+
+   
+  </div>
+  

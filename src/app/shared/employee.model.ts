@@ -11,6 +11,7 @@ export class Employee {
     hobbies: string='';
     password:string='';
     image:{id:number; url:string}[]=[];
+    role:string='';
 }
 
 export class Designation {
@@ -23,6 +24,22 @@ export class Hobbies{
     hobbyName:string='';
     isSelected: boolean = false;
 }
+
+
+export class Category{
+    id:number=0;
+    categories:string='';
+    subCategories:SubCategory[]=[];
+}
+
+export class SubCategory{
+    id:number=0;
+    categoryId:number=0;
+    subCategories:string='';
+
+}
+
+
 
 
 

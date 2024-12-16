@@ -16,12 +16,13 @@ export class LoginComponent {
     password: ''
   };
 
-  loginUrl: string = 'http://localhost:5213/api/Employees/Login';
+  loginUrl: string = 'http://localhost:5213/api/Auth/Login';
 
   constructor(private http:HttpClient,private router:Router) {}
 
   
   onLogin(form: NgForm) {
+    debugger;
     if (form.valid) {
       console.log('Login Data:', this.loginData);
       this.http.post(this.loginUrl,this.loginData).subscribe({
@@ -29,12 +30,14 @@ export class LoginComponent {
           console.log('login response',response)
           // localStorage is a feature of the Web Storage API that allows you to store key-value pairs in a web browser
           if(response.success){  //in this response.userName, "userName" should be same written in backend api,then only it will work
-          localStorage.setItem('userName',response.userName);
-          localStorage.setItem('email',response.email);
-          localStorage.setItem('userId',response.userId);
-          localStorage.setItem('image',response.image);
+          localStorage.setItem('userName',response.user.name);
+          localStorage.setItem('token',response.token);
+          localStorage.setItem('email',response.user.email);
+          localStorage.setItem('userId',response.user.id);
           this.router.navigate(['/redirect']);
-          }else{ //error() method prvided by console object
+          }
+
+          else{ //error() method prvided by console object
             console.error('Login Failed');
             alert('Invalid email or password, try again');
           }
@@ -48,7 +51,6 @@ export class LoginComponent {
       console.log("form is invalid");
       alert('please enter valid credentials');
     }
-
   }
 }
 

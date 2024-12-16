@@ -8,19 +8,15 @@
                 <div class="col-md-3">
                     <!-- property binding using [value] for getting dymnamic value -->
                     <input  type="hidden" name="id" [value]="empService.employeeData.id">
-
-
                     <label for="name" class="float-left">
                         Name <span class="text-danger">*</span>
                     </label>
                     <div *ngIf="name.invalid && (name.touched || name.dirty)" class="float-right"  >
-                       <p class="text-danger">Empty!!</p> 
+                        <p class="text-danger">Empty!!</p>      
                     </div>
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter name" #name="ngModel" [(ngModel)]="empService.employeeData.name" required     noSpaceValidator>
-                    
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter name" #name="ngModel" [(ngModel)]="empService.employeeData.name" (ngModelChange)="onNameChange($event)" required  >                   
                         <!-- #name reference variable and ngModel for two way data binding -->  
                 </div>
-
 
 
                 <div class="col-md-3">
@@ -44,9 +40,9 @@
                     <label for="age" class="float-left">Age<span class="text-danger">*</span></label>            
                     <div *ngIf="age.invalid && (age.touched || age.dirty)" class="float-right">
                         <!-- <div *ngIf="age.errors?.['age.required']">Age is required</div> -->
-                        <div *ngIf="age.errors?.['ageGreaterThan18']" class="text-danger">Age > 18!!</div>
+                        <div *ngIf="age.errors?.['min']" class="text-danger">Age > 18!</div>
                     </div>
-                    <input type="number" id="age" name="age" class="form-control" placeholder="Enter age" #age="ngModel" [(ngModel)]="empService.employeeData.age" required ageGreaterThan18>
+                    <input type="number" id="age" name="age" class="form-control" placeholder="Enter age" #age="ngModel" [(ngModel)]="empService.employeeData.age" required min="19">
                 </div>
                 
                 <div class="col-md-3">
@@ -100,21 +96,20 @@
                               
                         <!-- executed when editing -->
                         
-                        <div *ngIf="imageFromPar">
-                           
+                        <div *ngIf="imageFromPar">                           
                             <div *ngFor="let img of imageFromPar">
                               <img [src]="img.url" alt="Employee Image" class="img-thumbnail" width="80" height="80" />
                               <input type="checkbox" class="checkbox" (change)="onChecktick(img.id,$event)"  > 
                             </div> 
-
                         </div>
                         <div *ngIf="remove">
                             <button (click)="removeImage(this.empService.employeeData.id)">Remove</button>   
-                        </div>
-                    
+                        </div>                    
                     </div> 
 
-                    <div class="col-md-3" id="gender">
+
+
+                <div class="col-md-3" id="gender">
                     <label for="gender">Gender<span class="text-danger">*</span></label>
                     <div class="row">
                         <div *ngIf="gender.invalid && gender.touched" class="float-right">                       
@@ -132,7 +127,7 @@
                             </label>
                         </div>
                         </div>
-                    </div>
+                </div>
                
       
           <div class="col-md-6" id="hobby">
@@ -145,6 +140,17 @@
               </div>
             </div>
           </div>
+
+          <div>
+
+            <div class="col-md-4" class="container float-left">
+                <button (click)="onShowCategory()" class="btn btn-primary">Show Categories</button>
+            </div>
+
+          </div>
+        
+          
+
           <!-- //checked while saving form then only delete button will be enable for us to delete, otherwise not enabled, so issue is this checkbox is create in other html and delete is in other component html -->
 
           <div class="col-md-3">
@@ -163,6 +169,7 @@
             </div>
          </div>  
 
+     
             </div>
         </div>
     </form>
