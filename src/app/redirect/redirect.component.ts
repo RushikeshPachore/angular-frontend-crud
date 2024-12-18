@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { EmployeeService } from '../shared/employee.service';
 
 @Component({
   selector: 'app-redirect',
@@ -12,10 +13,11 @@ export class RedirectComponent {
   token:string=''
   userId:string=''
   image:string=''
+  gender:string=''
   // designation:string=''
+  answers: { [key: number]: string } = {}; 
 
-
-  constructor(private route:Router){}
+  constructor(public empService: EmployeeService,private route:Router){}
   //getting details using localStorage as we seyt them in login component
   ngOnInit(){ //as we navigated from login.ts after setting up userNmae there etc, now we get it here and set in our local variable userName
 
@@ -23,8 +25,14 @@ export class RedirectComponent {
     this.email=localStorage.getItem('email') || 'Guest'; 
     this.token=localStorage.getItem('token');
     this.userId=localStorage.getItem('userId');
+    this.gender=localStorage.getItem('gender');
 
-    console.log(this.image);
+    this.empService.getQuestion().subscribe(question=>{
+      this.empService.listQuestion=question;
+      console.log("ques,",this.empService.listQuestion);
+    })
+
+    
   }
 
   //method is called from html file

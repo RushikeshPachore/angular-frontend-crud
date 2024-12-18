@@ -1,10 +1,18 @@
 <!-- Assuming your cancel button is inside the employee-form component -->
 
+ <!-- adding dropdown  in form to show category and subcategory . dding functionaly that after selecting category then only subcategory dropdown is
+  enabled -->
+  <!-- writing ngOnInIt method in component , in that fethching category and subcategory. Adding filter while fetching subcategory such as 
+   when category is selected then for that category ,subcategories are displayed in subcategory dropdown. -->
+   <!-- adding category and subcategory column in employee table .
+    Storing category and subcategory in db using post api. -->
+    <!-- implementing ngOnChanges on input field from parent component -->
 
 <div class="formAdd" >
     <form autocomplete="off" #myform="ngForm" (ngSubmit)="myform.form.valid && submit(myform)">
         <div class="container" >
             <div class="row" style="margin:20px;">
+
                 <div class="col-md-3">
                     <!-- property binding using [value] for getting dymnamic value -->
                     <input  type="hidden" name="id" [value]="empService.employeeData.id">
@@ -15,7 +23,6 @@
                         <p class="text-danger">Empty!!</p>      
                     </div>
                     <input type="text" id="name" name="name" class="form-control" placeholder="Enter name" #name="ngModel" [(ngModel)]="empService.employeeData.name" (ngModelChange)="onNameChange($event)" required  >                   
-                        <!-- #name reference variable and ngModel for two way data binding -->  
                 </div>
 
 
@@ -35,6 +42,13 @@
                     </div>
                     <input type="email" id="email" name="email" class="form-control" placeholder="Enter email" #email="ngModel" [(ngModel)]="empService.employeeData.email"   pattern="[a-zA-Z0-9!#$%&amp;'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*"   required>
                 </div>
+
+                <!-- <div class="col-md-3">
+                    <div>
+                    <label for="isMarried">isMarried</label>
+                    <input type="checkbox"  name="isMarried" [(ngModel)]="empService.employeeData.isMarried" [value]="empService.employeeData.isMarried ? 1: 0" class="form-control" >
+                </div>
+                </div> -->
 
                 <div class="col-md-3">
                     <label for="age" class="float-left">Age<span class="text-danger">*</span></label>            
@@ -65,6 +79,8 @@
                     </select>
                 </div>  
 
+        
+
 
                 <div class="col-md-3">
                     <label for="password"class="float-left">Password<span class="text-danger">*</span></label>
@@ -75,14 +91,15 @@
                 </div>
 
 
- <!-- using <input type="image"> which is meant for image buttons, not for file uploads. 
-  Instead, you should use <input type="file"> for uploading an image. -->
+            <!-- using <input type="image"> which is meant for image buttons, not for file uploads. 
+                Instead, you should use <input type="file"> for uploading an image. -->
+
                     <div class="col-md-3">
                         <label for="image" class="float-left">Image</label>
                         
                         <div  class="float-right">
                             <div  *ngIf="(isImageRequired && image.invalid) || (image.touched && image.dirty) ">
-                            <!-- <div class="text-danger"> </div>   -->
+                     
                             </div>
                         </div>
 
@@ -91,7 +108,7 @@
                         <!-- for posting -->
                         <div *ngFor="let preview of imagePreviews">
                             <img [src]="preview.url" alt="Image preview" class="img-thumbnail" width="80" height="80" />
-                            <!-- <input type="checkbox" class="checkbox" > -->
+                    
                         </div>
                               
                         <!-- executed when editing -->
@@ -102,11 +119,35 @@
                               <input type="checkbox" class="checkbox" (change)="onChecktick(img.id,$event)"  > 
                             </div> 
                         </div>
+
                         <div *ngIf="remove">
                             <button (click)="removeImage(this.empService.employeeData.id)">Remove</button>   
-                        </div>                    
+                        </div> 
+
                     </div> 
 
+                    <div class="col-md-3 row">
+
+                        <label for="category">Select Category <span class="text-danger">*</span></label>
+                        <!-- Category Dropdown -->
+                         <!-- value of cate.id is assigned to selected category. -->
+                        <select class="form-control" name="category" [(ngModel)]="selectedCategory"  (change)="onCategoryChange()">
+                          <option >Select Category</option>
+                          <option *ngFor="let cate of empService.listCategory" [value]="cate.id">{{ cate.categories }}</option>
+                        </select>
+
+                        <!-- Subcategory Dropdown -->                     
+                        <label for="subCategory">Select Subcategory<span class="text-danger">*</span></label>  
+                                 
+                          <select class="form-control" name="subCategory" [(ngModel)]="selectedSubCategory" [disabled]="filteredSubcategories.length === 0">
+                            <option >Select Subcategory</option>
+                            <option *ngFor="let sub of filteredSubcategories" [value]="sub.id">{{ sub.subCategories }}</option>
+                          </select>
+                          
+                    </div>
+                      
+
+               
 
 
                 <div class="col-md-3" id="gender">
@@ -126,7 +167,7 @@
                                 <input type="radio" class="form-check-input" name="gender" #gender="ngModel" [(ngModel)]="empService.employeeData.gender" value="Female" required> Female
                             </label>
                         </div>
-                        </div>
+                    </div>
                 </div>
                
       
@@ -142,15 +183,11 @@
           </div>
 
           <div>
-
             <div class="col-md-4" class="container float-left">
                 <button (click)="onShowCategory()" class="btn btn-primary">Show Categories</button>
             </div>
-
           </div>
         
-          
-
           <!-- //checked while saving form then only delete button will be enable for us to delete, otherwise not enabled, so issue is this checkbox is create in other html and delete is in other component html -->
 
           <div class="col-md-3">
@@ -167,9 +204,7 @@
                 <!-- ALSO onCancel method can be used to reset -->
                 <button type="button" (click)="onCancel(myform)" id="cancel"  class="btn btn-danger btn-block">Cancel</button>
             </div>
-         </div>  
-
-     
+         </div>      
             </div>
         </div>
     </form>

@@ -34,6 +34,7 @@ export class LoginComponent {
           localStorage.setItem('token',response.token);
           localStorage.setItem('email',response.user.email);
           localStorage.setItem('userId',response.user.id);
+          localStorage.setItem('gender',response.user.gender);
           this.router.navigate(['/redirect']);
           }
 

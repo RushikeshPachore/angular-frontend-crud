@@ -5,6 +5,7 @@ export class Employee {
     email:string='';
     age:number;
     doj:any;
+    isMarried:boolean=false;
     gender:string='';
     designationID:number;
     designation:Designation;
@@ -37,6 +38,14 @@ export class SubCategory{
     categoryId:number=0;
     subCategories:string='';
 
+}
+
+
+
+export class Question{
+    id:number=0;
+    maleQues:string='';
+    femaleQues:string='';
 }
 
 

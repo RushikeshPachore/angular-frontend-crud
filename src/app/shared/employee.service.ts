@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Category, Designation, Employee, Hobbies, SubCategory } from './employee.model';
+import { Category, Designation, Employee, Hobbies, Question, SubCategory } from './employee.model';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 // import { Designation } from './designation.model';
 
@@ -8,8 +8,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class EmployeeService {
-SubCategories: any;
-  
+
   constructor(private http:HttpClient) { } //http object for crud operation
 
   imageUrl:string= 'http://localhost:5213/api/Image';
@@ -19,21 +18,29 @@ SubCategories: any;
   categoryUrl:string='http://localhost:5213/api/Employees/category';
   subCategoryUrl:string='http://localhost:5213/api/Employees/subCategory';
   
+  questionUrl:string='http://localhost:5213/api/Employees/questions';
+
   listEmployee:Employee[]=[];//for get ,Employee list will be saved here
   listDesignation:Designation[]=[]; //for get
   listHobbies:Hobbies[]=[];
   listCategory:Category[]=[];
   listSubCategory:SubCategory[]=[];
+
+  listQuestion:Question[]=[];
+
   employeeData:Employee=new Employee(); //to post data
 
   saveEmployee(employee:any): Observable<any>{ 
     return this.http.post(this.employeeUrl,employee); 
   }
 
+  getQuestion():Observable<Question[]>{
+    return this.http.get<Question[]>(this.questionUrl);
+  }
+
   getEmployeeById(employeeId: number): Observable<Employee> {
     return this.http.get<Employee>(`${this.employeeUrl}/${employeeId}`);
   }
-
 
   UpdateEmployee(employeeData:any): Observable<any>{
     if (!this.employeeData.id) {
@@ -42,6 +49,7 @@ SubCategories: any;
     return this.http.put(`${this.employeeUrl}/${this.employeeData.id}`,employeeData) //Here, this.employeeUrl is the base URL for the employee API (e.g., https://localhost:4200/api/Employee).
    // this.employeeData.id retrieves the ID of the employee you want to update. This ID is appended to the base URL to form the full URL. For example, if the ID is 123, the resulting URL might be https://localhost:4200/api/Employee/123.
   }
+
 
   getCategories():Observable<Category[]>{
     return this.http.get<Category[]>(this.categoryUrl);

@@ -1,10 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { HtmlParser } from '@angular/compiler';
-import {  Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import {  Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { AbstractControl, NgForm, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Designation, Employee } from 'src/app/shared/employee.model';
+import { Category, Designation, Employee, SubCategory } from 'src/app/shared/employee.model';
 import { EmployeeService } from 'src/app/shared/employee.service';
 
 
@@ -14,13 +14,18 @@ import { EmployeeService } from 'src/app/shared/employee.service';
   styleUrls: ['./employee-form.component.css']
 })
 
-export class EmployeeFormComponent implements OnInit {
+export class EmployeeFormComponent implements OnInit , OnChanges{
 
 //included to uncheck the hobby checkboxes after save manually
 @ViewChildren('hobbyCheckbox') hobbyCheckboxes: QueryList<ElementRef>;
 
 imageFiles:File[]=[];
 
+selectedCategory:number | null=null;
+
+selectedSubCategory:number | null=null;
+
+filteredSubcategories:SubCategory[]=[];
 //for Image editing and posting
 imagePreviews:{id:number; url:string}[]=[];
 selectedImageIds:number[]=[];  
@@ -41,42 +46,67 @@ isChecked = false;
 constructor(public empService: EmployeeService,private router:Router) {}
 
 
+ngOnChanges(changes: SimpleChanges): void {
+  this.empService.UpdateEmployee(this.empService.employeeData.id);
+  
+}
+
+
+
 
 //Lifecycle hook, called once when compoent is initialized. mostly used to fetch data from services or APIs.
-  ngOnInit() {
+ngOnInit() {
     this.empService.getHobbies().subscribe(hobbies => {
       this.empService.listHobbies = hobbies;
-      console.log(hobbies);
+
+        this.empService.getCategories().subscribe(cat=>{
+        this.empService.listCategory=cat;
+        console.log("Categories loaded:", this.empService.listCategory);
+        
+        this.empService.getSubCategories().subscribe(sub=>{
+        this.empService.listSubCategory=sub;
+        console.log("Subcategories loaded:", this.empService.listSubCategory);
+      });
+      });
 
       this.empService.getDesignation().subscribe(designations => {
         this.empService.listDesignation = designations;
-        
 
         // Fetch employee data if editing
         if (this.empService.employeeData.id !== 0) {
+
           this.empService.getEmployeeById(this.empService.employeeData.id).subscribe(employee => {
             this.empService.employeeData = employee;
             
-
             this.empService.getImages(this.empService.employeeData.id).subscribe((data) => {
               this.imagePreviews = data.map(img => ({  ...img,
                 url: img.url.startsWith('http://localhost:5213') ? img.url : `http://localhost:5213${img.url}` }));
             });            
             console.log("image preview :", this.imagePreviews);
-       
 
            this.empService.employeeData.hobbies = employee.hobbies
             ? employee.hobbies.split(',').filter(h => h).join(',')
             : '';
-        
-            
           });
         }
+      
       });
     });
-  }  
+  }
 
-
+  
+  onCategoryChange() { 
+    if (this.selectedCategory) {
+      this.filteredSubcategories = this.empService.listSubCategory.filter(sub => {     
+        return +sub.categoryId === +this.selectedCategory;
+        //"+" is used to compare numbers if they are in string  Or this=> sub.categoryId.toString() === this.selectedCategory.toString();
+      });
+    } else {
+      this.filteredSubcategories = []; // If no category selected, clear subcategories
+    }
+  }
+  
+  
 
   onCheckboxChange(event: any) {
     this.isChecked = event.target.checked;
@@ -90,10 +120,7 @@ constructor(public empService: EmployeeService,private router:Router) {}
       alert("Please select a designation.");
       return;
     } 
-
     const email=form.value.email?form.value.email.toLowerCase ():'';
-
-    // const age= form.value.age?form.value.age>"18":'';
     const employeeData = {
       id: this.empService.employeeData.id,
       name: form.value.name,
@@ -104,7 +131,10 @@ constructor(public empService: EmployeeService,private router:Router) {}
       gender: form.value.gender,
       password:form.value.password,
       designationID: form.value.designationID,
-      hobbies:  this.empService.employeeData.hobbies,  //checkbox so access this way
+      category:form.value.category,
+      isMarried:form.value.isMarried,
+      subCategory:form.value.subCategory,
+      hobbies: this.empService.employeeData.hobbies,  //checkbox so access this way
     };
     console.log('Employee Data to send:', employeeData);
     if (this.empService.employeeData.id === 0) {

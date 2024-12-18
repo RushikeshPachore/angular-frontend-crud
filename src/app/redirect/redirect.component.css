@@ -33,13 +33,21 @@
   .content {
     text-align: center;
     padding: 50px;
-  }
-  
-  h2 {
-    color: #28a745;
+    margin: 30px;
+    font-size: large;
+    font-weight: 500;
   }
   
 
+
+  .name{
+    margin: 5px;
+    padding: 5px;
+  }
+
+  .question{
+   margin: 10px;
+  }
 
 
 
