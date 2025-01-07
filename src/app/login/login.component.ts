@@ -24,7 +24,7 @@ export class LoginComponent {
   onLogin(form: NgForm) {
     debugger;
     if (form.valid) {
-      console.log('Login Data:', this.loginData);
+      // console.log('Login Data:', this.loginData);
       this.http.post(this.loginUrl,this.loginData).subscribe({
         next:(response:any)=>{
           console.log('login response',response)

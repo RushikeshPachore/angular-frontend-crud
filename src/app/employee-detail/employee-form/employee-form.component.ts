@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { HtmlParser } from '@angular/compiler';
-import {  Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import {  Component, ElementRef, EventEmitter, Input, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { AbstractControl, NgForm, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -14,7 +14,7 @@ import { EmployeeService } from 'src/app/shared/employee.service';
   styleUrls: ['./employee-form.component.css']
 })
 
-export class EmployeeFormComponent implements OnInit , OnChanges{
+export class EmployeeFormComponent {
 
 //included to uncheck the hobby checkboxes after save manually
 @ViewChildren('hobbyCheckbox') hobbyCheckboxes: QueryList<ElementRef>;
@@ -46,54 +46,45 @@ isChecked = false;
 constructor(public empService: EmployeeService,private router:Router) {}
 
 
-ngOnChanges(changes: SimpleChanges): void {
-  this.empService.UpdateEmployee(this.empService.employeeData.id);
-  
-}
-
-
-
-
 //Lifecycle hook, called once when compoent is initialized. mostly used to fetch data from services or APIs.
 ngOnInit() {
-    this.empService.getHobbies().subscribe(hobbies => {
-      this.empService.listHobbies = hobbies;
+  this.empService.getHobbies().subscribe(hobbies => {
+    this.empService.listHobbies = hobbies;
 
-        this.empService.getCategories().subscribe(cat=>{
-        this.empService.listCategory=cat;
-        console.log("Categories loaded:", this.empService.listCategory);
-        
-        this.empService.getSubCategories().subscribe(sub=>{
-        this.empService.listSubCategory=sub;
-        console.log("Subcategories loaded:", this.empService.listSubCategory);
-      });
-      });
-
-      this.empService.getDesignation().subscribe(designations => {
-        this.empService.listDesignation = designations;
-
-        // Fetch employee data if editing
-        if (this.empService.employeeData.id !== 0) {
-
-          this.empService.getEmployeeById(this.empService.employeeData.id).subscribe(employee => {
-            this.empService.employeeData = employee;
-            
-            this.empService.getImages(this.empService.employeeData.id).subscribe((data) => {
-              this.imagePreviews = data.map(img => ({  ...img,
-                url: img.url.startsWith('http://localhost:5213') ? img.url : `http://localhost:5213${img.url}` }));
-            });            
-            console.log("image preview :", this.imagePreviews);
-
-           this.empService.employeeData.hobbies = employee.hobbies
-            ? employee.hobbies.split(',').filter(h => h).join(',')
-            : '';
-          });
-        }
+      this.empService.getCategories().subscribe(cat=>{
+      this.empService.listCategory=cat;
+      console.log("Categories loaded:", this.empService.listCategory);
       
-      });
+      this.empService.getSubCategories().subscribe(sub=>{
+      this.empService.listSubCategory=sub;
+      console.log("Subcategories loaded:", this.empService.listSubCategory);
     });
-  }
+    });
 
+    this.empService.getDesignation().subscribe(designations => {
+      this.empService.listDesignation = designations;
+
+      // Fetch employee data if editing
+      if (this.empService.employeeData.id !== 0) {
+
+        this.empService.getEmployeeById(this.empService.employeeData.id).subscribe(employee => {
+          this.empService.employeeData = employee;
+          
+          this.empService.getImages(this.empService.employeeData.id).subscribe((data) => {
+            this.imagePreviews = data.map(img => ({  ...img,
+              url: img.url.startsWith('http://localhost:5213') ? img.url : `http://localhost:5213${img.url}` }));
+          });            
+          console.log("image preview :", this.imagePreviews);
+
+         this.empService.employeeData.hobbies = employee.hobbies
+          ? employee.hobbies.split(',').filter(h => h).join(',')
+          : '';
+        });
+      }
+    
+    });
+  });
+}
   
   onCategoryChange() { 
     if (this.selectedCategory) {
@@ -121,20 +112,19 @@ ngOnInit() {
       return;
     } 
     const email=form.value.email?form.value.email.toLowerCase ():'';
-    const employeeData = {
-      id: this.empService.employeeData.id,
-      name: form.value.name,
-      lastName: form.value.lastName,
-      email: email,
-      age: form.value.age,
-      doj: form.value.doj,
-      gender: form.value.gender,
-      password:form.value.password,
-      designationID: form.value.designationID,
-      category:form.value.category,
-      isMarried:form.value.isMarried,
-      subCategory:form.value.subCategory,
-      hobbies: this.empService.employeeData.hobbies,  //checkbox so access this way
+    const employeeData = {  
+        id: this.empService.employeeData.id ,
+        name: form.value.name ,
+        lastName: form.value.lastName ,
+        email: form.value.email?.toLowerCase() ,
+        age: form.value.age ,
+        doj: form.value.doj ? new Date(form.value.doj).toISOString() : null,
+        gender: form.value.gender ,
+        password: form.value.password ,
+        designationID: form.value.designationID,
+        hobbies: this.empService.employeeData.hobbies 
+      
+        //checkbox so access this way
     };
     console.log('Employee Data to send:', employeeData);
     if (this.empService.employeeData.id === 0) {
@@ -145,12 +135,15 @@ ngOnInit() {
   }
 
 
-  onNameChange(event:Event){
-    let inputValue = (event.target as HTMLInputElement).value;
-    if(!inputValue || inputValue.length==0)
-      return true;
-    return null;
-  }
+  // onNameChange(event:Event){
+  //   let inputValue = (event.target as HTMLInputElement).value;
+  //   if(!inputValue || inputValue.length==0)
+  //     return true;
+  //   return null;
+  // }
+
+
+
 
   //Where subscribe is written there response is seen.
   insertEmployee(employeeData: any, myform: NgForm) {
@@ -159,7 +152,6 @@ ngOnInit() {
         const newEmployeeId = response.id; // Get the employee ID
         employeeData.id=newEmployeeId;
         console.log("EmpID for process,",employeeData.id);        
-
         if (this.imageFiles.length > 0) {
           //console.log("Image filess in insert", this.imageFiles);
           this.empService.uploadImages(newEmployeeId, this.imageFiles).subscribe({
@@ -173,7 +165,7 @@ ngOnInit() {
           alert('Employee saved successfully.');
           this.resetForm(myform);
           this.refreshData();
-        }
+        } 
       },
       error: (error: HttpErrorResponse) => {
         if (error.status === 400 && error.error?.message === "The email is already in use by another employee.") {
@@ -184,8 +176,11 @@ ngOnInit() {
   }
 
 
-updateEmployee(employeeData: any, myform: NgForm) {
-    this.empService.UpdateEmployee(employeeData).subscribe({
+
+
+
+  updateEmployee(employeeData: any, myform: NgForm) {
+    this.empService.updateEmployee(employeeData).subscribe({
       next: (response) => {
         // Now, upload the images if there are any
         if (this.imageFiles.length > 0) {

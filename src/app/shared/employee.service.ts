@@ -4,9 +4,12 @@ import { Category, Designation, Employee, Hobbies, Question, SubCategory } from 
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 // import { Designation } from './designation.model';
 
+
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class EmployeeService {
 
   constructor(private http:HttpClient) { } //http object for crud operation
@@ -17,24 +20,25 @@ export class EmployeeService {
   hobbyUrl:string='http://localhost:5213/api/Hobbies';
   categoryUrl:string='http://localhost:5213/api/Employees/category';
   subCategoryUrl:string='http://localhost:5213/api/Employees/subCategory';
-  
+  answerUrl:string='http://localhost:5213/api/Employees/answers/';
   questionUrl:string='http://localhost:5213/api/Employees/questions';
+  
 
   listEmployee:Employee[]=[];//for get ,Employee list will be saved here
   listDesignation:Designation[]=[]; //for get
   listHobbies:Hobbies[]=[];
   listCategory:Category[]=[];
   listSubCategory:SubCategory[]=[];
-
   listQuestion:Question[]=[];
 
   employeeData:Employee=new Employee(); //to post data
 
-  saveEmployee(employee:any): Observable<any>{ 
-    return this.http.post(this.employeeUrl,employee); 
+  saveEmployee(employee: any): Observable<any> {
+    // debugger;
+    return this.http.post(this.employeeUrl, employee);
   }
 
-  getQuestion():Observable<Question[]>{
+  getQuestion(): Observable<Question[]> {
     return this.http.get<Question[]>(this.questionUrl);
   }
 
@@ -42,12 +46,15 @@ export class EmployeeService {
     return this.http.get<Employee>(`${this.employeeUrl}/${employeeId}`);
   }
 
-  UpdateEmployee(employeeData:any): Observable<any>{
+  updateEmployee(employeeData: any): Observable<any> {
     if (!this.employeeData.id) {
       throw new Error("Employee ID is undefined.");
     }
-    return this.http.put(`${this.employeeUrl}/${this.employeeData.id}`,employeeData) //Here, this.employeeUrl is the base URL for the employee API (e.g., https://localhost:4200/api/Employee).
-   // this.employeeData.id retrieves the ID of the employee you want to update. This ID is appended to the base URL to form the full URL. For example, if the ID is 123, the resulting URL might be https://localhost:4200/api/Employee/123.
+    return this.http.put(`${this.employeeUrl}/${this.employeeData.id}`, employeeData);
+  }
+
+  saveAnswers(employeeId: any, answers: any): Observable<any> {
+    return this.http.post<any>(`${this.answerUrl}${employeeId}`, answers);
   }
 
 
@@ -74,38 +81,30 @@ export class EmployeeService {
     return this.http.get<Designation[]>(this.designationUrl);
   }
 
+  
 
-  deleteEmployee(id:number):Observable<any> {
+  deleteEmployee(id: number): Observable<any> {
     return this.http.delete(`${this.employeeUrl}/${id}`);
   }
 
-
-  getImages(employeeId: number):Observable<{ id:number; url:string }[]> {
-  const apiUrl = `http://localhost:5213/api/Image/Employee/${employeeId}`;
-  console.log("apiUrl,",apiUrl);
-  return this.http.get<{ id:number; url:string }[]>(
-    apiUrl
-  );
+  getImages(employeeId: number): Observable<{ id: number; url: string }[]> {
+    const apiUrl = `http://localhost:5213/api/Image/Employee/${employeeId}`;
+    // console.log("apiUrl,", apiUrl);        
+    return this.http.get<{ id: number; url: string }[]>(apiUrl);
   }
 
-
-  uploadImages(employeeId: number, imageFiles: File[]) {
-  const formData = new FormData();
-  formData.append('employeeId', employeeId.toString());
-  imageFiles.forEach((file) => {
-    formData.append('images',file, file.name);
-  });
-  return this.http.post('http://localhost:5213/api/Image/Upload',formData, {
-    headers: {
-      // Do not include `Content-Type` header as Angular automatically sets it for FormData
-    },
-  });
+  uploadImages(employeeId: number, imageFiles: File[]):Observable<any> {
+    const formData = new FormData();
+    formData.append('employeeId', employeeId.toString());
+    imageFiles.forEach((file) => {
+      formData.append('images', file, file.name);
+    });
+    return this.http.post('http://localhost:5213/api/Image/Upload', formData);
   }
 
-
-  removeImages(employeeId:number,imageIds:number[]): Observable<any>
-  { debugger;
-  return this.http.post<any>(`http://localhost:5213/api/Image/removeImages/${employeeId}`,imageIds)
+  removeImages(employeeId: number, imageIds: number[]): Observable<any> {
+    return this.http.post<any>(`http://localhost:5213/api/Image/removeImages/${employeeId}`, imageIds);
   }
+
 
 }

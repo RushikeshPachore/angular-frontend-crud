@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { Category } from 'src/app/shared/employee.model';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Category, SubCategory } from 'src/app/shared/employee.model'; // Make sure this path is correct
 import { EmployeeService } from 'src/app/shared/employee.service';
 
 @Component({
@@ -8,11 +8,10 @@ import { EmployeeService } from 'src/app/shared/employee.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-
-  constructor(public categoryService:EmployeeService, public router :Router){}
+export class HomeComponent implements OnInit {
 
 
+  constructor(public categoryService: EmployeeService, public router: Router) {}
 
   ngOnInit(): void {
     // Fetch categories
@@ -30,11 +29,8 @@ export class HomeComponent {
         });
       }
 
-  
 
-
-  navigate():void{
+  navigate(): void {
     this.router.navigate(['/employee-details']);
   }
-
 }

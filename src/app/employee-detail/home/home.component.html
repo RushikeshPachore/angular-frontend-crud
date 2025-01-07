@@ -6,12 +6,12 @@
           <th>Category Id</th>
           <th>Category Name</th>
           <th>SubCategory Name</th>
-          <!-- <th>Subcategory Name</th> -->
+      
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let category of categoryService.listCategory">
-          <!-- This will display the category name and span the rows based on the number of subcategories -->
+    
           <td >{{ category.id  }}</td>
           <td >{{ category.categories }}</td>
           

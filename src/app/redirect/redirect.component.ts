@@ -34,7 +34,7 @@ export class RedirectComponent {
 
     
   }
-
+  
   //method is called from html file
   logout(){
     localStorage.clear();

@@ -5,6 +5,22 @@ import { DatePipe } from '@angular/common';
 import { NgForm } from '@angular/forms';
 import { EmployeeFormComponent } from './employee-form/employee-form.component';
 
+export interface ImageResponse {
+  $id: string;
+  $values: { id: string; url: string }[];
+}
+//so when im saving employee one by ne so one designation is visible only once sfter that when i select same desg. for next employe it is shown blank in UI , but saved in db
+
+// Define an interface for the image structure
+// interface Image {
+//   id: number;
+//   url: string;
+// }
+
+// Define an interface for the employee structure
+
+
+
 @Component({
   selector: 'app-employee-detail',
   templateUrl: './employee-detail.component.html',
@@ -30,35 +46,35 @@ updateCheckboxState(isChecked: boolean) {
       //all the data is stored in 'data' variable using subscribe first then we passs that data variable to listEmployee created in service.
       //after that list is rendered in employee-detail.html using ngFor  //subscribe to retrive data
       // Fetch available hobbies from the service or backend
+      ngOnInit(){
 
-  ngOnInit(){
-
-    this.empService.getEmployee().subscribe((data)=>{   
-      this.empService.listEmployee=data;     
-      console.log('Employee Data: emp-details-compo ',  this.empService.listEmployee);   
-      this.empService.listEmployee.forEach(employee => {  //fetching from each employee images using forEach for that
-        if (employee.id > 0) { // Ensure valid employee ID
-          this.empService.getImages(employee.id).subscribe(
-            (images) => {
-              // Prefix the URL if it's a relative path
-              employee.image = images.map(img => ({
-                ...img,
-                url: img.url.startsWith('http://localhost:5213') ? img.url : `http://localhost:5213${img.url}`
-              }));
-            },
-            (error) => {
-              console.error(`Error fetching images for employee ${employee.id}:`, error);
-              employee.image = []; // Default to empty array in case of error
+        this.empService.getEmployee().subscribe((data)=>{   
+          this.empService.listEmployee=data;     
+          console.log('Employee Data: emp-details-compo ',  this.empService.listEmployee);   
+          this.empService.listEmployee.forEach(employee => {  //fetching from each employee images using forEach for that
+            if (employee.id > 0) { // Ensure valid employee ID
+              this.empService.getImages(employee.id).subscribe(
+                (images) => {
+                  // Prefix the URL if it's a relative path
+                  employee.image = images.map(img => ({
+                    ...img,
+                    url: img.url.startsWith('http://localhost:5213') ? img.url : `http://localhost:5213${img.url}`
+                  }));
+                },
+                (error) => {
+                  console.error(`Error fetching images for employee ${employee.id}:`, error);
+                  employee.image = []; // Default to empty array in case of error
+                }
+              );
             }
-          );
-        }
-      });
-    this.empService.getHobbies().subscribe(hobbies => {
-      this.availableHobbies = hobbies;
-      console.log('Available Hobbies:', hobbies); 
-    });
-  });    
-}
+          });
+        this.empService.getHobbies().subscribe(hobbies => {
+          this.availableHobbies = hobbies;
+          console.log('Available Hobbies:', hobbies); 
+        });
+      });    
+    }
+      
 
 
 
@@ -89,13 +105,17 @@ updateCheckboxState(isChecked: boolean) {
     console.log("Hobbies for editing (as IDs):", this.empService.employeeData.hobbies); 
     let df = this.datepipe.transform(selectedEmployee.doj, 'yyyy-MM-dd');
     this.empService.employeeData.doj = df;   
-    this.empService.employeeData.password ='';    
-
-    //Image Editing
-    this.empService.getImages(selectedEmployee.id).subscribe(images => {
-      // Map the image URLs to the employeeData
-      this.imageShow = images.map(img => ({ ...img, url: `http://localhost:5213/${img.url}` }));
-    });
+    this.empService.employeeData.password ='';
+   
+    
+       //Image Editing
+       this.empService.getImages(selectedEmployee.id).subscribe(images => {
+        // Map the image URLs to the employeeData
+        this.imageShow = images.map(img => ({ ...img, url: `http://localhost:5213/${img.url}` }));
+      });
+    
+    
+    
   }
 
 

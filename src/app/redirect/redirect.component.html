@@ -1,11 +1,11 @@
 <div class="header">
-    <div class="user-info">
-        <span>Welcome !! </span>
-        <span > {{ userName }} {{userId}}</span>
-        <span>{{email}}</span>
-        <!-- <span>{{designation}}</span> -->
-        <button (click)="logout()">Logout</button>
-    </div>
+  <div class="user-info">
+      <span>Welcome !! </span>
+      <span > {{ userName }} {{userId}}</span>
+      <span>{{email}}</span>
+      <!-- <span>{{designation}}</span> -->
+      <button (click)="logout()">Logout</button>
+  </div>
 </div>
 
 
@@ -13,34 +13,34 @@
 
 <div class="content">
 
-    <!-- <div *ngIf="image">
-    <div *ngFor="let img of image">
-    <img  [src]="img" alt="User Image" class="user-image">
-    </div>
-    </div> -->
+  <!-- <div *ngIf="image">
+  <div *ngFor="let img of image">
+  <img  [src]="img" alt="User Image" class="user-image">
+  </div>
+  </div> -->
 
-  <div *ngIf="gender === 'Male'" >
-    <div *ngFor="let maleQ of empService.listQuestion"  >
-      <p class="question">{{ maleQ.maleQues }}</p>
-      <input type="text"  [(ngModel)]="answers[maleQ.id]" class="name" placeholder="Enter your answer">
-    </div>
+<div *ngIf="gender === 'Male'" >
+  <div *ngFor="let maleQ of empService.listQuestion || []"  >
+    <p class="question">{{ maleQ.maleQues }}</p>
+    <input type="text"  [(ngModel)]="answers[maleQ.id]" class="name" placeholder="Enter your answer">
   </div>
-  
-  <div *ngIf="gender === 'Female'">
-    <div *ngFor="let femaleQ of empService.listQuestion">
-      <p class="question">{{ femaleQ.femaleQues }}</p>
-      <input type="text"  [(ngModel)]="answers[femaleQ.id]" class="name" placeholder="Enter your answer">
-    </div>
+</div>
+
+<div *ngIf="gender === 'Female'">
+  <div *ngFor="let femaleQ of empService.listQuestion || []">
+    <p class="question">{{ femaleQ.femaleQues }}</p>
+    <input type="text"  [(ngModel)]="answers[femaleQ.id]" class="name" placeholder="Enter your answer">
   </div>
-  
+</div>
+
 </div>
 <nav>
-    <ul>
-        <li >
-            <a routerLink="/employee-details">Emp Details</a>
-        </li>
-    </ul>
+  <ul>
+      <li >
+          <a routerLink="/employee-details">Emp Details</a>
+      </li>
+  </ul>
 </nav>
 
 <!-- Instead of using interpolation ({{Image}}), you can use Angular's property binding with [src]. 
- This way, Angular will dynamically bind the image URL to the src attribute of the <img> tag. -->
+This way, Angular will dynamically bind the image URL to the src attribute of the <img> tag. -->

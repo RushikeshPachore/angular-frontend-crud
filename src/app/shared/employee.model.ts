@@ -20,6 +20,7 @@ export class Designation {
    designation:string='';
 }
 
+
 export class Hobbies{
     hobbyId:number=0;
     hobbyName:string='';
@@ -27,19 +28,18 @@ export class Hobbies{
 }
 
 
-export class Category{
-    id:number=0;
-    categories:string='';
-    subCategories:SubCategory[]=[];
-}
-
-export class SubCategory{
-    id:number=0;
-    categoryId:number=0;
-    subCategories:string='';
-
-}
-
+export class Category {
+    id: number = 0;
+    categories: string = '';  // Category name
+    subCategories: SubCategory[] = [];  // Array of SubCategory objects
+  }
+  
+  export class SubCategory {
+    id: number = 0;
+    categoryId: number = 0;
+    subCategories: string = '';  // Name of the subcategory
+  }
+  
 
 
 export class Question{
@@ -50,7 +50,14 @@ export class Question{
 
 
 
-
-
-
-
+// export interface Question {
+//     id: number;
+//     maleQues: string;
+//     femaleQues: string;
+//   }
+  
+//   export interface ApiResponse {
+//     $id: string;
+//     $values: Question[]; // The $values array that contains the questions
+//   }
+  
