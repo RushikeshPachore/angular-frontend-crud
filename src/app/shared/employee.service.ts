@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Category, Designation, Employee, Hobbies, Question, SubCategory } from './employee.model';
+import { Answer, Category, Designation, Employee, Hobbies, Question, SubCategory } from './employee.model';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 // import { Designation } from './designation.model';
 
@@ -20,10 +20,10 @@ export class EmployeeService {
   hobbyUrl:string='http://localhost:5213/api/Hobbies';
   categoryUrl:string='http://localhost:5213/api/Employees/category';
   subCategoryUrl:string='http://localhost:5213/api/Employees/subCategory';
-  answerUrl:string='http://localhost:5213/api/Employees/answers/';
+  answerUrl:string='http://localhost:5213/api/Employees/answers';
   questionUrl:string='http://localhost:5213/api/Employees/questions';
   
-
+  
   listEmployee:Employee[]=[];//for get ,Employee list will be saved here
   listDesignation:Designation[]=[]; //for get
   listHobbies:Hobbies[]=[];
@@ -33,8 +33,17 @@ export class EmployeeService {
 
   employeeData:Employee=new Employee(); //to post data
 
+  saveAnswer(answer:any):Observable<any>{
+    return this.http.post(this.answerUrl,answer);
+  }
+
+
+  getAnswers(employeeId: number): Observable<Answer[]> {
+    return this.http.get<Answer[]>(`${this.answerUrl}/${employeeId}`);
+  }
+  
+
   saveEmployee(employee: any): Observable<any> {
-    // debugger;
     return this.http.post(this.employeeUrl, employee);
   }
 

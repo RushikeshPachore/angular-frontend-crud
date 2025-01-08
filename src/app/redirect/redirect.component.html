@@ -8,32 +8,43 @@
   </div>
 </div>
 
+<div class="content">
+  <span>Total Questions: {{ totalQuestion }}</span>
+  <br>
+  <span>Answered : {{ answeredQuestions }}</span>
+</div>
 
 
+<!-- this is my questions, i want to save them to db after clicking save button  -->
 
 <div class="content">
-
   <!-- <div *ngIf="image">
   <div *ngFor="let img of image">
-  <img  [src]="img" alt="User Image" class="user-image">
-  </div>
+  <img  [src]="img" alt="User Image" class="user-image">  (click)="saveAnswers(answers)
+  </div>[(ngModel)]="answers[maleQ.id]" [(ngModel)]="answers[femaleQ.id]"
   </div> -->
 
-<div *ngIf="gender === 'Male'" >
-  <div *ngFor="let maleQ of empService.listQuestion || []"  >
-    <p class="question">{{ maleQ.maleQues }}</p>
-    <input type="text"  [(ngModel)]="answers[maleQ.id]" class="name" placeholder="Enter your answer">
+
+  <div *ngIf="gender === 'Male'">
+    <div *ngFor="let maleQ of empService.listQuestion || []; let i = index">
+      <p class="question">{{ maleQ.maleQues }}</p>
+      <input type="text" [(ngModel)]="answers[i]" class="name" placeholder="Enter your answer">
+    </div>
   </div>
+  
+  <div *ngIf="gender === 'Female'">
+    <div *ngFor="let femaleQ of empService.listQuestion || []; let i = index">
+      <p class="question">{{ femaleQ.femaleQues }}</p>
+      <input type="text" [(ngModel)]="answers[i]" class="name" placeholder="Enter your answer">
+    </div>
+  </div>
+  
+<div style="margin: 30px;">
+  <button type="submit" class="btn btn-success" (click)="saveAnswers()">Save</button>
 </div>
 
-<div *ngIf="gender === 'Female'">
-  <div *ngFor="let femaleQ of empService.listQuestion || []">
-    <p class="question">{{ femaleQ.femaleQues }}</p>
-    <input type="text"  [(ngModel)]="answers[femaleQ.id]" class="name" placeholder="Enter your answer">
-  </div>
 </div>
 
-</div>
 <nav>
   <ul>
       <li >

@@ -35,6 +35,7 @@ export class LoginComponent {
           localStorage.setItem('email',response.user.email);
           localStorage.setItem('userId',response.user.id);
           localStorage.setItem('gender',response.user.gender);
+          // console.log("quesId",response.token);
           this.router.navigate(['/redirect']);
           }
 

@@ -50,14 +50,10 @@ export class Question{
 
 
 
-// export interface Question {
-//     id: number;
-//     maleQues: string;
-//     femaleQues: string;
-//   }
-  
-//   export interface ApiResponse {
-//     $id: string;
-//     $values: Question[]; // The $values array that contains the questions
-//   }
-  
+export class Answer{
+  id?:number=0;
+  employeeId:number=0;
+  answer:string='';
+  questionId?:number=0;
+
+}
